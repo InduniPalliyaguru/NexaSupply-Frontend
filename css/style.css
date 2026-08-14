@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700;800&display=swap');
+
+:root {
+    --nexa-primary: #6f2c91;
+    --nexa-dark: #3b0a45;
+    --nexa-accent: #8b5cf6;
+    --nexa-text-dark: #1e1b24;
+    --nexa-text-muted: #6b7280;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    /* High-Resolution Supply Chain Desk / Logistics Workspace Background Image */
+    background: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nexa-text-dark);
+}
+
+/* Light & Transparent Overlay - Background Image එක පැහැදිලිව පෙනෙන පරිදි */
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(243, 232, 255, 0.25) 100%);
+    backdrop-filter: blur(3px); /* Subtle blur so background stays crystal clear */
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 0;
+}
+
+/* Form Container Card */
+.main-content-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 490px;
+    padding: 2.5rem 2.2rem;
+    background: rgba(255, 255, 255, 0.92); /* Clean White Semi-Transparent Card */
+    border-radius: 28px;
+    box-shadow: 0 25px 60px rgba(59, 10, 69, 0.18);
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    margin: 1.5rem;
+}
+
+/* --- LOGO & BRANDING (Extra Large & Stylish) --- */
+.big-logo-img {
+    max-height: 130px; /* Lokuwata penෙන සයිස් එක */
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
+    transition: transform 0.3s ease;
+}
+
+.big-logo-img:hover {
+    transform: scale(1.03);
+}
+
+.brand-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #3b0a45 0%, #6f2c91 50%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 0.3rem;
+}
+
+.form-heading {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--nexa-dark);
+}
+
+/* --- PILL INPUT FIELDS --- */
+.pill-input-group {
+    position: relative;
+    margin-bottom: 1.1rem;
+}
+
+.pill-input-group .input-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--nexa-text-muted);
+    font-size: 1rem;
+    z-index: 5;
+}
+
+.pill-input-group .password-toggle {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--nexa-text-muted);
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 5;
+    transition: color 0.2s ease;
+}
+
+.pill-input-group .password-toggle:hover {
+    color: var(--nexa-primary);
+}
+
+.pill-control {
+    width: 100%;
+    padding: 13px 48px 13px 48px;
+    border-radius: 50px !important;
+    border: 1.5px solid #e2e8f0;
+    background: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--nexa-text-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+}
+
+.pill-control:focus {
+    outline: none;
+    border-color: var(--nexa-primary);
+    box-shadow: 0 6px 20px rgba(111, 44, 145, 0.18);
+}
+
+.pill-control::placeholder {
+    color: #a0aec0;
+}
+
+/* --- PILL BUTTON --- */
+.btn-pill-primary {
+    width: 100%;
+    padding: 14px;
+    border-radius: 50px;
+    border: none;
+    background: linear-gradient(135deg, var(--nexa-dark), var(--nexa-primary));
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    box-shadow: 0 10px 25px rgba(111, 44, 145, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-pill-primary:hover {
+    background: linear-gradient(135deg, var(--nexa-primary), var(--nexa-accent));
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(111, 44, 145, 0.4);
+    color: #ffffff;
+}
+
+/* --- TOGGLE LINK & FOOTER --- */
+.toggle-auth-link {
+    color: var(--nexa-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.toggle-auth-link:hover {
+    text-decoration: underline;
+}
+
+.copyright-text {
+    font-size: 0.78rem;
+    color: var(--nexa-text-muted);
+    text-align: center;
+    margin-top: 2rem;
+}
