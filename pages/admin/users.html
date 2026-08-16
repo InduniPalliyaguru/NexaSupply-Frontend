@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaSupply - User Management</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../../css/admin.css">
+
+    <style>
+        :root {
+            --sidebar-width: 260px;
+        }
+
+        body {
+            overflow-x: hidden;
+            background-color: #f8fafc;
+        }
+
+        /* Sidebar Responsive Layout */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1050;
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 1.5rem;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 1040;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Mobile & Tablet Breaks */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0 !important;
+                padding: 1rem;
+            }
+        }
+
+        /* Topbar & Control Formatting */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        @media (max-width: 575.98px) {
+            .responsive-control-group {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch !important;
+            }
+
+            .responsive-control-group select,
+            .responsive-control-group input {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR NAVIGATION -->
+<aside class="sidebar" id="sidebar">
+    <div>
+        <div class="brand-logo-area d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <img src="../../images/logo.png" alt="NexaSupply Logo" onerror="this.style.display='none';">
+                <span class="brand-title">NexaSupply</span>
+            </div>
+            <!-- Mobile Close Button -->
+            <button class="btn text-white d-lg-none p-0" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark fs-4"></i>
+            </button>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-link-custom">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="users.html" class="nav-link-custom active">
+                <i class="fa-solid fa-users-gear"></i> User Management
+            </a>
+            <a href="inventory.html" class="nav-link-custom">
+                <i class="fa-solid fa-boxes-stacked"></i> Inventory & Stock
+            </a>
+            <a href="suppliers-restock.html" class="nav-link-custom">
+                <i class="fa-solid fa-truck-field"></i> Suppliers & Restock
+            </a>
+            <a href="orders.html" class="nav-link-custom">
+                <i class="fa-solid fa-cart-flatbed"></i> Master Orders
+            </a>
+            <a href="shipments.html" class="nav-link-custom">
+                <i class="fa-solid fa-route"></i> Logistics & Drivers
+            </a>
+            <a href="payments-ledger.html" class="nav-link-custom">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Finance & Audits
+            </a>
+        </nav>
+    </div>
+
+    <div class="p-3">
+        <button onclick="window.location.href='../../index.html'" class="btn btn-logout w-100">
+            <i class="fa-solid fa-right-from-bracket me-2"></i> Logout System
+        </button>
+    </div>
+</aside>
+
+<!-- MAIN CONTENT AREA -->
+<main class="main-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="top-navbar">
+        <div class="d-flex align-items-center gap-2">
+            <!-- Sidebar Toggle Button for Mobile/Tablet -->
+            <button class="btn btn-light d-lg-none shadow-sm rounded-circle" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div>
+                <h4 class="fw-bold mb-0 fs-5 fs-md-4" style="color: var(--nexa-dark);">User & Retailer Management</h4>
+                <span class="text-muted small d-none d-sm-inline">Approve retailers, manage user accounts, and register system admins</span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 gap-sm-3">
+            <button class="btn text-white rounded-pill px-3 fw-bold btn-sm btn-md-md text-nowrap" style="background: var(--nexa-primary);" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+                <i class="fa-solid fa-user-plus me-1"></i> Add New Admin
+            </button>
+
+            <div class="user-badge" onclick="window.location.href='profile.html'" style="cursor: pointer;" title="Click to View Profile">
+                <div class="user-avatar">A</div>
+                <div class="d-none d-md-block">
+                    <div class="fw-bold small" style="color: var(--nexa-dark);">System Admin</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">admin@nexasupply.com</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION 1: PENDING APPROVALS -->
+    <div class="content-card mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">
+                    <i class="fa-solid fa-user-clock text-warning me-2"></i>Pending Retailer Approvals
+                </h5>
+                <p class="text-muted small mb-0">Newly registered retailers awaiting account verification</p>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-custom align-middle text-nowrap">
+                <thead>
+                <tr>
+                    <th>Shop Name</th>
+                    <th>Owner Name</th>
+                    <th>Contact Email</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="pendingUsersTable">
+                <!-- Sample UI Row -->
+                <tr>
+                    <td class="fw-bold">Lanka Super Mart</td>
+                    <td>Kamal Perera</td>
+                    <td>kamal@lankamart.lk</td>
+                    <td>0771234567</td>
+                    <td>No 45, Main St, Kandy</td>
+                    <td class="text-end">
+                        <button class="btn btn-success btn-sm rounded-pill px-3 me-1" onclick="openApproveModal('RET-1001')">
+                            <i class="fa-solid fa-check me-1"></i> Approve
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="rejectUser('RET-1001')">
+                            <i class="fa-solid fa-xmark me-1"></i> Reject
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SECTION 2: ACTIVE USERS DIRECTORY WITH ROLE FILTER -->
+    <div class="content-card">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+            <div>
+                <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">
+                    <i class="fa-solid fa-users text-primary me-2"></i>Active System Users
+                </h5>
+                <p class="text-muted small mb-0">List of active retailers and admins in the system</p>
+            </div>
+
+            <!-- SEARCH AND ROLE FILTER OPTIONS -->
+            <div class="d-flex align-items-center gap-2 responsive-control-group">
+                <!-- GET USERS BY ROLE FILTER -->
+                <select id="roleFilter" class="form-select rounded-pill px-3" style="width: 170px;" onchange="filterUsersByRole(this.value)">
+                    <option value="ALL" selected>All Roles</option>
+                    <option value="ADMIN">ADMINS Only</option>
+                    <option value="RETAILER">RETAILERS Only</option>
+                </select>
+
+                <input type="text" id="searchUser" class="form-control rounded-pill px-3" placeholder="Search code/email..." style="width: 200px;">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-custom align-middle text-nowrap">
+                <thead>
+                <tr>
+                    <th>User Code</th>
+                    <th>Role</th>
+                    <th>User / Business Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Allocated Credit</th>
+                    <th>Account Status</th>
+                    <th class="text-end">Action</th>
+                </tr>
+                </thead>
+                <tbody id="activeUsersTable">
+                <!-- Sample UI Row: Retailer -->
+                <tr>
+                    <td class="fw-bold" style="color: var(--nexa-primary);">RET-1002</td>
+                    <td><span class="badge bg-info text-dark rounded-pill">RETAILER</span></td>
+                    <td>Metro General Store</td>
+                    <td>metro@gmail.com</td>
+                    <td>0719876543</td>
+                    <td class="fw-bold text-success">LKR 500,000.00</td>
+                    <td><span class="pill-badge badge-approved">APPROVED</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-light btn-sm rounded-circle" onclick="deleteUser('RET-1002')">
+                            <i class="fa-solid fa-trash text-danger"></i>
+                        </button>
+                    </td>
+                </tr>
+                <!-- Sample UI Row: Admin -->
+                <tr>
+                    <td class="fw-bold" style="color: var(--nexa-primary);">ADM-1001</td>
+                    <td><span class="badge bg-purple text-white rounded-pill" style="background: var(--nexa-primary);">ADMIN</span></td>
+                    <td>System Super Admin</td>
+                    <td>admin@nexasupply.com</td>
+                    <td>0770000000</td>
+                    <td class="text-muted">N/A</td>
+                    <td><span class="pill-badge badge-approved">ACTIVE</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-light btn-sm rounded-circle" onclick="deleteUser('ADM-1001')">
+                            <i class="fa-solid fa-trash text-danger"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<!-- ================= ADD NEW ADMIN MODAL ================= -->
+<div class="modal fade" id="addAdminModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold" style="color: var(--nexa-dark);">Register New System Admin</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 p-md-4">
+                <form id="addAdminForm">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-bold">Full Name *</label>
+                            <input type="text" class="form-control rounded-pill px-3" id="adminFullName" placeholder="e.g. Nimal Fernando" minlength="3" maxlength="100" required>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-bold">Email Address *</label>
+                            <input type="email" class="form-control rounded-pill px-3" id="adminEmail" placeholder="admin@nexasupply.com" required>
+                        </div>
+
+                        <!-- PASSWORD FIELD WITH SHOW/HIDE TOGGLE -->
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-bold">Password *</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control border-end-0 rounded-start-pill px-3" id="adminPassword" placeholder="••••••••" required>
+                                <button class="btn btn-outline-secondary border-start-0 rounded-end-pill px-3" type="button" onclick="togglePasswordVisibility()">
+                                    <i class="fa-solid fa-eye" id="togglePasswordIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-bold">Phone Number (10 Digits) *</label>
+                            <input type="text" class="form-control rounded-pill px-3" id="adminPhone" placeholder="0771234567" pattern="^[0-9]{10}$" required>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-bold">Office / Department Name</label>
+                            <input type="text" class="form-control rounded-pill px-3" id="adminShopName" placeholder="e.g. Head Office Admin">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-bold">Address</label>
+                            <input type="text" class="form-control rounded-pill px-3" id="adminAddress" placeholder="e.g. Colombo, Sri Lanka">
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold" style="background: var(--nexa-primary);">
+                            Create Admin Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= APPROVE & SET CREDIT LIMIT MODAL ================= -->
+<div class="modal fade" id="approveCreditModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold" style="color: var(--nexa-dark);">Approve Retailer Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 p-md-4">
+                <p class="text-muted small mb-3">Set an initial Credit Limit for this retailer to enable order placement.</p>
+
+                <form id="approveUserForm">
+                    <input type="hidden" id="approveUserCode">
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Allocated Credit Limit (LKR)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 fw-bold">LKR</span>
+                            <input type="number" class="form-control border-start-0" id="creditLimitInput" placeholder="e.g. 250000" step="1000" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold" style="background: var(--nexa-primary);">
+                            Confirm & Approve
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let approveModalBS;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        approveModalBS = new bootstrap.Modal(document.getElementById('approveCreditModal'));
+    });
+
+    // Mobile Sidebar Drawer Toggle Function
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+    }
+
+    // PASSWORD VISIBILITY TOGGLE FUNCTION
+    function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('adminPassword');
+        const icon = document.getElementById('togglePasswordIcon');
+
+        if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            pwdInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    // ROLE FILTER HANDLER
+    function filterUsersByRole(selectedRole) {
+        if (selectedRole === 'ALL') {
+            // Fetch GET /api/v1/admin/users
+        } else {
+            // Fetch GET /api/v1/admin/users/role/{selectedRole}
+        }
+    }
+
+    function openApproveModal(userCode) {
+        document.getElementById('approveUserCode').value = userCode;
+        document.getElementById('creditLimitInput').value = '';
+        approveModalBS.show();
+    }
+
+    function rejectUser(userCode) {
+        if(confirm(`Are you sure you want to reject user ${userCode}?`)) {
+            // Executed: PUT /api/v1/admin/users/reject/{userCode}
+        }
+    }
+
+    function deleteUser(userCode) {
+        if(confirm(`Are you sure you want to delete user ${userCode}?`)) {
+            // Executed: DELETE /api/v1/admin/users/{userCode}
+        }
+    }
+</script>
+</body>
+</html>
