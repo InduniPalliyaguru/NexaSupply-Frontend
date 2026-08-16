@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaSupply - Product Storefront</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Admin/Theme Specific CSS -->
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="../../css/retailer/storefront.css">
+
+</head>
+<body>
+
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- RETAILER SIDEBAR NAVIGATION -->
+<aside class="sidebar" id="sidebar">
+    <div>
+        <div class="brand-logo-area d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <img src="../../images/logo.png" alt="NexaSupply Logo" onerror="this.style.display='none';">
+                <span class="brand-title">NexaSupply</span>
+            </div>
+            <button class="btn text-white d-lg-none p-0" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark fs-4"></i>
+            </button>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-link-custom">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="storefront.html" class="nav-link-custom active">
+                <i class="fa-solid fa-store"></i> Product Store
+            </a>
+            <a href="my-orders.html" class="nav-link-custom">
+                <i class="fa-solid fa-bag-shopping"></i> My Orders
+            </a>
+            <a href="my-finance.html" class="nav-link-custom">
+                <i class="fa-solid fa-wallet"></i> Credit Ledger
+            </a>
+        </nav>
+    </div>
+
+    <div class="p-3">
+        <button onclick="window.location.href='../../index.html'" class="btn btn-logout w-100">
+            <i class="fa-solid fa-right-from-bracket me-2"></i> Logout System
+        </button>
+    </div>
+</aside>
+
+<!-- MAIN CONTENT AREA -->
+<main class="main-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="top-navbar">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-light d-lg-none shadow-sm rounded-circle" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div>
+                <h4 class="fw-bold mb-0 fs-5 fs-md-4" style="color: var(--nexa-dark);">Product Storefront</h4>
+                <span class="text-muted small d-none d-sm-inline">Browse items and place wholesale procurement orders</span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 gap-sm-3">
+            <!-- CART SLIDE TOGGLE BUTTON -->
+            <button class="btn btn-light rounded-circle position-relative p-2 shadow-sm"
+                    type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                <i class="fa-solid fa-cart-shopping fa-lg text-primary"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                      id="cartBadgeCount">
+                    0
+                </span>
+            </button>
+
+            <!-- USER PROFILE BADGE -->
+            <div class="user-badge user-badge-hover p-1 px-2 d-flex align-items-center gap-2"
+                 onclick="window.location.href='profile.html'" title="Click to View Profile">
+                <div class="user-avatar" id="headerAvatar">R</div>
+                <div class="d-none d-md-block">
+                    <div class="fw-bold small text-start" style="color: var(--nexa-dark);" id="headerName">Retailer
+                        Store
+                    </div>
+                    <div class="text-muted" style="font-size: 0.72rem;">My Profile <i
+                            class="fa-solid fa-chevron-right ms-1" style="font-size: 0.6rem;"></i></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SEARCH & FILTER BAR SECTION -->
+    <div class="content-card p-3 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-12 col-md-5 col-lg-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
+                        <i class="fa-solid fa-magnifying-glass text-muted"></i>
+                    </span>
+                    <input type="text" class="form-control bg-light border-start-0 rounded-end-pill"
+                           id="txtSearch" placeholder="Search by name or code..." onkeyup="filterProducts()">
+                </div>
+            </div>
+
+            <!-- Categories Horizontal Filter Pills -->
+            <div class="col-12 col-md-7 col-lg-8">
+                <div class="d-flex gap-2 overflow-auto pb-1" id="categoryPillsContainer">
+                    <button class="category-pill active" onclick="selectCategory('ALL', this)">All Categories</button>
+                    <!-- Categories dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCTS CATALOG GRID -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4 mb-4" id="productsGrid">
+        <!-- Dynamic Product Cards populated via JS -->
+    </div>
+
+</main>
+
+<!-- SHOPPING CART OFFCANVAS SIDEBAR -->
+<div class="offcanvas offcanvas-end rounded-start-4 border-0 shadow-lg" tabindex="-1" id="cartOffcanvas"
+     aria-labelledby="cartOffcanvasLabel" style="width: 400px; max-width: 90vw;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="cartOffcanvasLabel" style="color: var(--nexa-dark);">
+            <i class="fa-solid fa-cart-flatbed me-2 text-primary"></i>My Order Cart
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column justify-content-between p-3">
+        <div class="overflow-auto pe-1" id="cartItemsList">
+            <!-- Dynamic Cart Items -->
+            <div class="text-center text-muted py-5">
+                <i class="fa-solid fa-basket-shopping fs-1 mb-2 opacity-50"></i>
+                <p class="small mb-0">Your order cart is currently empty.</p>
+            </div>
+        </div>
+
+        <!-- CART SUMMARY & CHECKOUT -->
+        <div class="border-top pt-3 mt-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small fw-semibold">Total Item Types:</span>
+                <span class="fw-bold text-dark" id="lblCartTotalTypes">0</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted small fw-semibold">Estimated Price Total:</span>
+                <h5 class="fw-bold text-success mb-0" id="lblCartTotalPrice">LKR 0.00</h5>
+            </div>
+            <button class="btn btn-primary w-100 py-2.5 rounded-pill fw-semibold shadow-sm" onclick="handlePlaceOrder()"
+                    id="btnCheckout">
+                <i class="fa-solid fa-paper-plane me-2"></i> Place Wholesale Order
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ORDER SUCCESS & PDF MODAL -->
+<div class="modal fade" id="orderSuccessModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 text-center p-4">
+            <div class="modal-body">
+                <div class="mb-3 text-success">
+                    <i class="fa-solid fa-circle-check display-3"></i>
+                </div>
+                <h4 class="fw-bold mb-1" style="color: var(--nexa-dark);">Order Placed Successfully!</h4>
+                <p class="text-muted small mb-3">Your order request has been submitted for system processing.</p>
+
+                <div class="bg-light p-3 rounded-3 mb-4">
+                    <span class="text-muted small d-block">Generated Order Code</span>
+                    <strong class="fs-5 text-primary" id="modalOrderCode">#ORD-0000</strong>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-danger py-2 rounded-pill fw-semibold" id="btnDownloadPdfModal">
+                        <i class="fa-solid fa-file-pdf me-2"></i> Download Invoice PDF
+                    </button>
+                    <button class="btn btn-light py-2 rounded-pill fw-semibold text-muted" data-bs-dismiss="modal">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="../../js/config.js"></script>
+<script src="../../js/retailer/storefront.js"></script>
+</body>
+</html>

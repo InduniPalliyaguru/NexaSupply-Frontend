@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaSupply - Master Orders</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="../../css/admin/orders.css">
+
+</head>
+<body>
+
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR NAVIGATION -->
+<aside class="sidebar" id="sidebar">
+    <div>
+        <div class="brand-logo-area d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <img src="../../images/logo.png" alt="NexaSupply Logo" onerror="this.style.display='none';">
+                <span class="brand-title">NexaSupply</span>
+            </div>
+            <button class="btn text-white d-lg-none p-0" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark fs-4"></i>
+            </button>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-link-custom">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="users.html" class="nav-link-custom">
+                <i class="fa-solid fa-users-gear"></i> User Management
+            </a>
+            <a href="inventory.html" class="nav-link-custom">
+                <i class="fa-solid fa-boxes-stacked"></i> Inventory & Stock
+            </a>
+            <a href="suppliers-restock.html" class="nav-link-custom">
+                <i class="fa-solid fa-truck-field"></i> Suppliers & Restock
+            </a>
+            <a href="orders.html" class="nav-link-custom active">
+                <i class="fa-solid fa-cart-flatbed"></i> Master Orders
+            </a>
+            <a href="shipments.html" class="nav-link-custom">
+                <i class="fa-solid fa-route"></i> Logistics & Drivers
+            </a>
+            <a href="payments-ledger.html" class="nav-link-custom">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Finance & Audits
+            </a>
+        </nav>
+    </div>
+
+    <div class="p-3">
+        <button onclick="window.location.href='../../index.html'" class="btn btn-logout w-100">
+            <i class="fa-solid fa-right-from-bracket me-2"></i> Logout System
+        </button>
+    </div>
+</aside>
+
+<!-- MAIN CONTENT AREA -->
+<main class="main-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="top-navbar">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-light d-lg-none shadow-sm rounded-circle" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div>
+                <h4 class="fw-bold mb-0 fs-5 fs-md-4" style="color: var(--nexa-dark);">Master Orders Management</h4>
+                <span class="text-muted small d-none d-sm-inline">Review retailer orders, approve requests and export invoice PDFs</span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <div class="user-badge" onclick="window.location.href='profile.html'" style="cursor: pointer;"
+                 title="Click to View Profile">
+                <div class="user-avatar">A</div>
+                <div class="d-none d-md-block">
+                    <div class="fw-bold small" style="color: var(--nexa-dark);">System Admin</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">admin@nexasupply.com</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- TAB NAVIGATION -->
+    <ul class="nav nav-tabs nav-tabs-custom mb-4" id="orderTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pendingPane"
+                    type="button" role="tab">
+                <i class="fa-solid fa-clock-rotate-left me-2"></i>Pending Approval
+                <span class="badge rounded-pill bg-danger ms-1" id="pendingBadgeCount">1</span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="all-orders-tab" data-bs-toggle="tab" data-bs-target="#allOrdersPane"
+                    type="button" role="tab">
+                <i class="fa-solid fa-boxes-packing me-2"></i>All Master Orders
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="orderTabsContent">
+
+        <!-- TAB 1: PENDING ORDERS (APPROVAL ACTIONS) -->
+        <div class="tab-pane fade show active" id="pendingPane" role="tabpanel">
+            <div class="content-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">Pending Retailer Orders</h5>
+                        <p class="text-muted small mb-0">Approve or cancel incoming orders placed by registered
+                            retailers</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>Order Code</th>
+                            <th>Retailer Email</th>
+                            <th>Order Date</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th class="text-end">Approve / Cancel Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="pendingOrdersTableBody">
+                        <!-- Sample Pending Row -->
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">ORD-2026-8801</td>
+                            <td>retailer@citysuper.com</td>
+                            <td class="text-muted small">16 Aug 2026, 10:30 AM</td>
+                            <td class="fw-bold text-dark">LKR 450,000.00</td>
+                            <td><span class="badge badge-status-pending rounded-pill px-3 py-2">PENDING</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-secondary me-1 rounded-pill"
+                                        onclick="viewOrderDetails('ORD-2026-8801')">
+                                    <i class="fa-solid fa-eye me-1"></i> View
+                                </button>
+                                <button class="btn btn-sm btn-success me-1 rounded-pill"
+                                        onclick="updateOrderStatus('ORD-2026-8801', 'APPROVED')">
+                                    <i class="fa-solid fa-check me-1"></i> Approve
+                                </button>
+                                <button class="btn btn-sm btn-danger rounded-pill"
+                                        onclick="updateOrderStatus('ORD-2026-8801', 'CANCELLED')">
+                                    <i class="fa-solid fa-xmark me-1"></i> Cancel
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: ALL MASTER ORDERS DIRECTORY -->
+        <div class="tab-pane fade" id="allOrdersPane" role="tabpanel">
+            <div class="content-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">All Master Orders Directory</h5>
+                        <p class="text-muted small mb-0">Complete order registry with status tracking and PDF invoice
+                            generation</p>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 responsive-control-group">
+                        <select class="form-select rounded-pill px-3" id="filterStatusSelect" onchange="filterOrders()"
+                                style="width: 160px;">
+                            <option value="ALL">All Statuses</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="DISPATCHED">Dispatched</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                        <input type="text" id="searchOrderInput" class="form-control rounded-pill px-3"
+                               placeholder="Search code / email..." onkeyup="filterOrders()" style="width: 220px;">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>Order Code</th>
+                            <th>Retailer Email</th>
+                            <th>Order Date</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th class="text-center">Invoice PDF</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="allOrdersTableBody">
+                        <!-- Sample Rows -->
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">ORD-2026-8801</td>
+                            <td>retailer@citysuper.com</td>
+                            <td class="text-muted small">16 Aug 2026, 10:30 AM</td>
+                            <td class="fw-bold text-dark">LKR 450,000.00</td>
+                            <td><span class="badge badge-status-pending rounded-pill px-3 py-2">PENDING</span></td>
+                            <td class="text-center">
+                                <button class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                        onclick="downloadInvoicePdf('ORD-2026-8801')">
+                                    <i class="fa-solid fa-file-pdf me-1"></i> PDF
+                                </button>
+                            </td>
+                            <td class="text-end">
+                                <button class="btn btn-light btn-sm rounded-circle"
+                                        onclick="viewOrderDetails('ORD-2026-8801')">
+                                    <i class="fa-solid fa-eye text-secondary"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">ORD-2026-8790</td>
+                            <td>lanka_mart@gmail.com</td>
+                            <td class="text-muted small">15 Aug 2026, 04:12 PM</td>
+                            <td class="fw-bold text-dark">LKR 890,500.00</td>
+                            <td><span class="badge badge-status-approved rounded-pill px-3 py-2">APPROVED</span></td>
+                            <td class="text-center">
+                                <button class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                        onclick="downloadInvoicePdf('ORD-2026-8790')">
+                                    <i class="fa-solid fa-file-pdf me-1"></i> PDF
+                                </button>
+                            </td>
+                            <td class="text-end">
+                                <button class="btn btn-light btn-sm rounded-circle"
+                                        onclick="viewOrderDetails('ORD-2026-8790')">
+                                    <i class="fa-solid fa-eye text-secondary"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">ORD-2026-8650</td>
+                            <td>keells_store@keells.com</td>
+                            <td class="text-muted small">14 Aug 2026, 09:00 AM</td>
+                            <td class="fw-bold text-dark">LKR 1,200,000.00</td>
+                            <td><span class="badge badge-status-dispatched rounded-pill px-3 py-2">DISPATCHED</span>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                        onclick="downloadInvoicePdf('ORD-2026-8650')">
+                                    <i class="fa-solid fa-file-pdf me-1"></i> PDF
+                                </button>
+                            </td>
+                            <td class="text-end">
+                                <button class="btn btn-light btn-sm rounded-circle"
+                                        onclick="viewOrderDetails('ORD-2026-8650')">
+                                    <i class="fa-solid fa-eye text-secondary"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<!-- ================= VIEW ORDER DETAILS MODAL ================= -->
+<div class="modal fade" id="viewOrderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold" style="color: var(--nexa-dark);">Order Detailed Overview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 p-md-4">
+                <div class="row g-3 mb-4 bg-light p-3 rounded-3">
+                    <div class="col-6 col-md-3">
+                        <span class="text-muted small d-block">Order Code</span>
+                        <span class="fw-bold" id="viewModalOrderCode" style="color: var(--nexa-primary);">-</span>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <span class="text-muted small d-block">Retailer Email</span>
+                        <span class="fw-bold text-dark" id="viewModalCustomerEmail">-</span>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <span class="text-muted small d-block">Order Date</span>
+                        <span class="fw-bold text-dark" id="viewModalOrderDate">-</span>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <span class="text-muted small d-block">Current Status</span>
+                        <span id="viewModalOrderStatus">-</span>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold mb-3" style="color: var(--nexa-dark);">Ordered Items List</h6>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>Product Code</th>
+                            <th>Quantity Ordered</th>
+                        </tr>
+                        </thead>
+                        <tbody id="viewModalOrderItemsTable">
+                        <!-- Items rendered via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 mt-3">
+                    <span class="fw-bold text-muted">Total Order Value:</span>
+                    <span class="fs-5 fw-bold text-success" id="viewModalTotalPrice">LKR 0.00</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-4 fw-semibold"
+                            id="btnModalDownloadPdf">
+                        <i class="fa-solid fa-file-pdf me-1"></i> Download Invoice PDF
+                    </button>
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../js/config.js"></script>
+<script src="../../js/admin/orders.js"></script>
+</body>
+</html>

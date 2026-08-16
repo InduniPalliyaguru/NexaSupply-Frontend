@@ -11,108 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Admin Specific CSS -->
     <link rel="stylesheet" href="../../css/admin.css">
-    <style>
-        :root {
-            --sidebar-width: 260px;
-        }
+    <link rel="stylesheet" href="../../css/admin/dashboard.css">
 
-        body {
-            overflow-x: hidden;
-            background-color: #f8fafc;
-        }
-
-        /* Responsive Sidebar Drawer Styles */
-        .sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1050;
-            transition: transform 0.3s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .main-wrapper {
-            margin-left: var(--sidebar-width);
-            min-height: 100vh;
-            padding: 1.5rem;
-            transition: margin-left 0.3s ease-in-out;
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(2px);
-            z-index: 1040;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar-overlay.show {
-            display: block;
-            opacity: 1;
-        }
-
-        /* Mobile & Tablet Responsive Breakdown */
-        @media (max-width: 991.98px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-            .main-wrapper {
-                margin-left: 0 !important;
-                padding: 1rem;
-            }
-        }
-
-        /* Notification & Topbar Responsive Controls */
-        .top-navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .notification-item {
-            transition: background 0.2s ease;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .notification-item:hover {
-            background-color: #f8fafc;
-        }
-
-        .notification-item.unread {
-            background-color: #f0f7ff;
-        }
-
-        .user-badge-hover:hover {
-            background-color: #f1f5f9;
-            cursor: pointer;
-            border-radius: 50px;
-        }
-
-        @media (max-width: 575.98px) {
-            .notification-menu-custom {
-                width: 300px !important;
-                max-width: 90vw !important;
-            }
-        }
-    </style>
 </head>
 <body>
 
@@ -127,7 +27,6 @@
                 <img src="../../images/logo.png" alt="NexaSupply Logo" onerror="this.style.display='none';">
                 <span class="brand-title">NexaSupply</span>
             </div>
-            <!-- Mobile Close Button -->
             <button class="btn text-white d-lg-none p-0" onclick="toggleSidebar()">
                 <i class="fa-solid fa-xmark fs-4"></i>
             </button>
@@ -171,7 +70,6 @@
     <!-- TOPBAR -->
     <header class="top-navbar">
         <div class="d-flex align-items-center gap-2">
-            <!-- Sidebar Toggle Button for Mobile/Tablet -->
             <button class="btn btn-light d-lg-none shadow-sm rounded-circle" onclick="toggleSidebar()">
                 <i class="fa-solid fa-bars"></i>
             </button>
@@ -188,7 +86,6 @@
                         id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false"
                         onclick="loadNotifications()">
                     <i class="fa-solid fa-bell fa-lg text-secondary"></i>
-                    <!-- UNREAD COUNT BADGE -->
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                           id="unreadBadge" style="display: none;">
                         0
@@ -206,9 +103,7 @@
                         </button>
                     </div>
 
-                    <!-- DYNAMIC NOTIFICATION LIST CONTAINER -->
                     <div id="notificationList">
-                        <!-- Sample UI Notification Items -->
                         <div class="notification-item p-2 rounded-3 unread position-relative">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="fw-bold small text-dark">New Retailer Registered</div>
@@ -241,144 +136,109 @@
         </div>
     </header>
 
-    <!-- KPI METRIC CARDS -->
+    <!-- KPI METRIC CARDS (Matching AdminDashboardDTO) -->
     <div class="row g-2 g-md-4 mb-4">
+        <!-- 1. Total Revenue -->
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="stat-card">
                 <div class="stat-icon-wrapper icon-purple">
                     <i class="fa-solid fa-wallet"></i>
                 </div>
                 <div class="text-muted small fw-semibold">Total Revenue</div>
-                <div class="stat-value my-1">LKR 0.00</div>
-                <span class="text-success small fw-bold"><i class="fa-solid fa-arrow-up me-1"></i>Updated Today</span>
+                <div class="stat-value my-1" id="statTotalRevenue">LKR 0.00</div>
+                <span class="text-success small fw-bold"><i
+                        class="fa-solid fa-chart-line me-1"></i>All Time Revenue</span>
             </div>
         </div>
 
+        <!-- 2. Pending Orders -->
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="stat-card">
                 <div class="stat-icon-wrapper icon-amber">
                     <i class="fa-solid fa-clock"></i>
                 </div>
                 <div class="text-muted small fw-semibold">Pending Orders</div>
-                <div class="stat-value my-1">0</div>
+                <div class="stat-value my-1" id="statPendingOrders">0</div>
                 <span class="text-warning small fw-bold"><i class="fa-solid fa-circle-exclamation me-1"></i>Requires Action</span>
             </div>
         </div>
 
+        <!-- 3. Low Stock Products -->
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="stat-card">
                 <div class="stat-icon-wrapper icon-rose">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
-                <div class="text-muted small fw-semibold">Low Stock Warnings</div>
-                <div class="stat-value my-1">0</div>
-                <span class="text-danger small fw-bold"><i class="fa-solid fa-arrow-down me-1"></i>Below Minimum</span>
+                <div class="text-muted small fw-semibold">Low Stock Products</div>
+                <div class="stat-value my-1" id="statLowStock">0</div>
+                <span class="text-danger small fw-bold"><i
+                        class="fa-solid fa-arrow-down me-1"></i>Below Threshold</span>
             </div>
         </div>
 
+        <!-- 4. Active Retailers (Updated from activeRetailersCount) -->
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="stat-card">
                 <div class="stat-icon-wrapper icon-blue">
-                    <i class="fa-solid fa-users"></i>
+                    <i class="fa-solid fa-store"></i>
                 </div>
-                <div class="text-muted small fw-semibold">Pending Retailers</div>
-                <div class="stat-value my-1">0</div>
+                <div class="text-muted small fw-semibold">Active Retailers</div>
+                <div class="stat-value my-1" id="statActiveRetailers">0</div>
                 <span class="text-primary small fw-bold"><i
-                        class="fa-solid fa-user-clock me-1"></i>Needs Approval</span>
+                        class="fa-solid fa-circle-check me-1"></i>Active Accounts</span>
             </div>
         </div>
     </div>
 
-    <!-- RECENT ACTIVITY DATA TABLE -->
-    <div class="content-card">
-        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-4">
-            <div>
-                <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">Recent System Activity</h5>
-                <p class="text-muted small mb-0">Latest orders submitted across the supply chain network</p>
+    <!-- MONTHLY SALES CHART SECTION (Matching MonthlySalesDTO) -->
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-lg-8">
+            <div class="content-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">Monthly Sales Revenue</h5>
+                        <p class="text-muted small mb-0">Overview of total sales breakdown per month</p>
+                    </div>
+                </div>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="monthlySalesChart"></canvas>
+                </div>
             </div>
-            <button class="btn btn-sm text-white rounded-pill px-3 align-self-start align-self-sm-center text-nowrap"
-                    style="background: var(--nexa-primary);" onclick="window.location.href='orders.html'">
-                View All Orders
-            </button>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-custom align-middle text-nowrap">
-                <thead>
-                <tr>
-                    <th>Order Code</th>
-                    <th>Retailer Shop</th>
-                    <th>Date & Time</th>
-                    <th>Grand Total</th>
-                    <th>Status</th>
-                    <th class="text-end">Action</th>
-                </tr>
-                </thead>
-                <tbody id="recentOrdersTable">
-                <tr>
-                    <td class="fw-bold" style="color: var(--nexa-primary);">ORD-2026-0001</td>
-                    <td>Super Mart - Colombo</td>
-                    <td class="text-muted small">16 Aug 2026, 10:30 AM</td>
-                    <td class="fw-bold">LKR 45,500.00</td>
-                    <td><span class="pill-badge badge-pending">PENDING</span></td>
-                    <td class="text-end">
-                        <button class="btn btn-light btn-sm rounded-circle"><i class="fa-solid fa-eye"></i></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <!-- MONTHLY SALES SUMMARY TABLE -->
+        <div class="col-12 col-lg-4">
+            <div class="content-card h-100">
+                <h5 class="fw-bold mb-3" style="color: var(--nexa-dark);">Monthly Summary</h5>
+                <div class="table-responsive" style="max-height: 290px; overflow-y: auto;">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th class="text-end">Total Sales</th>
+                        </tr>
+                        </thead>
+                        <tbody id="monthlySalesTableBody">
+                        <tr>
+                            <td colspan="2" class="text-center text-muted py-3">Loading sales data...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Chart.js CDN for Monthly Sales Chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../../js/config.js"></script>
+<script src="../../js/admin/dashboard.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchUnreadNotificationCount();
-    });
 
-    // Mobile Sidebar Drawer Toggle Function
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-
-        sidebar.classList.toggle('show');
-        overlay.classList.toggle('show');
-    }
-
-    // 1. Fetch Unread Notification Count (GET /api/v1/notifications/unread-count)
-    function fetchUnreadNotificationCount() {
-        // JS will call backend endpoint and update UI badge
-        const count = 3; // Mock value
-        const badge = document.getElementById('unreadBadge');
-        if (count > 0) {
-            badge.innerText = count;
-            badge.style.display = 'inline-block';
-        } else {
-            badge.style.display = 'none';
-        }
-    }
-
-    // 2. Fetch User Notifications List (GET /api/v1/notifications)
-    function loadNotifications() {
-        // JS will fetch notifications and populate #notificationList
-    }
-
-    // 3. Mark Single Notification as Read (PUT /api/v1/notifications/{id}/read)
-    function markNotificationAsRead(notificationId) {
-        // JS will trigger mark as read
-    }
-
-    // 4. Mark All Notifications as Read (PUT /api/v1/notifications/read-all)
-    function markAllNotificationsAsRead() {
-        // JS will trigger mark all as read
-    }
-
-    // 5. Delete Notification (DELETE /api/v1/notifications/{id})
-    function deleteNotification(notificationId) {
-        // JS will trigger delete notification
-    }
 </script>
 </body>
 </html>

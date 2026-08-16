@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaSupply - Logistics & Drivers</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="../../css/admin/shipment.css">
+
+</head>
+<body>
+
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR NAVIGATION -->
+<aside class="sidebar" id="sidebar">
+    <div>
+        <div class="brand-logo-area d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <img src="../../images/logo.png" alt="NexaSupply Logo" onerror="this.style.display='none';">
+                <span class="brand-title">NexaSupply</span>
+            </div>
+            <button class="btn text-white d-lg-none p-0" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark fs-4"></i>
+            </button>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-link-custom">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="users.html" class="nav-link-custom">
+                <i class="fa-solid fa-users-gear"></i> User Management
+            </a>
+            <a href="inventory.html" class="nav-link-custom">
+                <i class="fa-solid fa-boxes-stacked"></i> Inventory & Stock
+            </a>
+            <a href="suppliers-restock.html" class="nav-link-custom">
+                <i class="fa-solid fa-truck-field"></i> Suppliers & Restock
+            </a>
+            <a href="orders.html" class="nav-link-custom">
+                <i class="fa-solid fa-cart-flatbed"></i> Master Orders
+            </a>
+            <a href="shipments.html" class="nav-link-custom active">
+                <i class="fa-solid fa-route"></i> Logistics & Drivers
+            </a>
+            <a href="payments-ledger.html" class="nav-link-custom">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Finance & Audits
+            </a>
+        </nav>
+    </div>
+
+    <div class="p-3">
+        <button onclick="window.location.href='../../index.html'" class="btn btn-logout w-100">
+            <i class="fa-solid fa-right-from-bracket me-2"></i> Logout System
+        </button>
+    </div>
+</aside>
+
+<!-- MAIN CONTENT AREA -->
+<main class="main-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="top-navbar">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-light d-lg-none shadow-sm rounded-circle" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div>
+                <h4 class="fw-bold mb-0 fs-5 fs-md-4" style="color: var(--nexa-dark);">Logistics & Drivers
+                    Management</h4>
+                <span class="text-muted small d-none d-sm-inline">Manage active dispatch shipments, tracking codes, and delivery driver fleet</span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <div class="user-badge" onclick="window.location.href='profile.html'" style="cursor: pointer;"
+                 title="Click to View Profile">
+                <div class="user-avatar">A</div>
+                <div class="d-none d-md-block">
+                    <div class="fw-bold small" style="color: var(--nexa-dark);">System Admin</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">admin@nexasupply.com</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION TABS (Shipments vs Drivers Directory) -->
+    <ul class="nav nav-tabs nav-tabs-custom mb-4" id="logisticsTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="shipments-tab" data-bs-toggle="tab" data-bs-target="#shipmentsPane"
+                    type="button" role="tab">
+                <i class="fa-solid fa-truck-fast me-2"></i>Active Shipments
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="drivers-tab" data-bs-toggle="tab" data-bs-target="#driversPane" type="button"
+                    role="tab">
+                <i class="fa-solid fa-id-card me-2"></i>Fleet Drivers
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="logisticsTabsContent">
+
+        <!-- TAB 1: ACTIVE SHIPMENTS MANAGEMENT -->
+        <div class="tab-pane fade show active" id="shipmentsPane" role="tabpanel">
+            <div class="content-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">Shipments Directory</h5>
+                        <p class="text-muted small mb-0">Track order dispatches, status progression and driver
+                            assignments</p>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 responsive-control-group">
+                        <select class="form-select rounded-pill px-3" id="filterShipmentStatus"
+                                onchange="filterShipments()" style="width: 160px;">
+                            <option value="ALL">All Statuses</option>
+                            <option value="PENDING">PENDING</option>
+                            <option value="DISPATCHED">DISPATCHED</option>
+                            <option value="IN_TRANSIT">IN_TRANSIT</option>
+                            <option value="DELIVERED">DELIVERED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                        </select>
+                        <input type="text" id="searchShipmentInput" class="form-control rounded-pill px-3"
+                               placeholder="Tracking / Order / Driver..." onkeyup="filterShipments()"
+                               style="width: 200px;">
+                        <button class="btn text-white rounded-pill px-3 fw-bold text-nowrap"
+                                style="background: var(--nexa-primary);" onclick="openCreateShipmentModal()">
+                            <i class="fa-solid fa-plus me-1"></i> Create Shipment
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>Tracking Number</th>
+                            <th>Order Code</th>
+                            <th>Assigned Driver</th>
+                            <th>Dispatched Date</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="shipmentsTableBody">
+                        <!-- Sample UI Row -->
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">TRK-2026-9901</td>
+                            <td class="fw-bold text-dark">ORD-2026-8801</td>
+                            <td>
+                                <div><span class="fw-semibold">Kamal Perera</span></div>
+                                <small class="text-muted">DRV-101</small>
+                            </td>
+                            <td class="text-muted small">16 Aug 2026, 08:30 AM</td>
+                            <td><span class="badge badge-ship-intransit rounded-pill px-3 py-2">IN_TRANSIT</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-light btn-sm rounded-circle me-1"
+                                        onclick="openUpdateStatusModal('TRK-2026-9901', 'IN_TRANSIT')"
+                                        title="Update Status">
+                                    <i class="fa-solid fa-arrows-rotate text-primary"></i>
+                                </button>
+                                <button class="btn btn-light btn-sm rounded-circle"
+                                        onclick="deleteShipment('TRK-2026-9901')" title="Delete Shipment">
+                                    <i class="fa-solid fa-trash text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: FLEET DRIVERS MANAGEMENT -->
+        <div class="tab-pane fade" id="driversPane" role="tabpanel">
+            <div class="content-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">Registered Drivers Directory</h5>
+                        <p class="text-muted small mb-0">Manage delivery driver profiles, contact details and trip
+                            availability</p>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 responsive-control-group">
+                        <select class="form-select rounded-pill px-3" id="filterDriverStatus" onchange="filterDrivers()"
+                                style="width: 150px;">
+                            <option value="ALL">All Statuses</option>
+                            <option value="AVAILABLE">AVAILABLE</option>
+                            <option value="ON_TRIP">ON_TRIP</option>
+                        </select>
+
+                        <!-- DRIVER SEARCH INPUT -->
+                        <input type="text" id="searchDriverInput" class="form-control rounded-pill px-3"
+                               placeholder="Search code / name / phone..." onkeyup="filterDrivers()"
+                               style="width: 220px;">
+
+                        <button class="btn text-white rounded-pill px-3 fw-bold text-nowrap"
+                                style="background: var(--nexa-primary);" onclick="openAddDriverModal()">
+                            <i class="fa-solid fa-user-plus me-1"></i> Add Driver
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>Driver Code</th>
+                            <th>Driver Name</th>
+                            <th>Phone Number</th>
+                            <th>License No</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="driversTableBody">
+                        <!-- Sample UI Rows -->
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">DRV-101</td>
+                            <td class="fw-bold text-dark">Kamal Perera</td>
+                            <td>0771234567</td>
+                            <td>B1234567</td>
+                            <td><span class="badge badge-driver-ontrip rounded-pill px-3 py-2">ON_TRIP</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-light btn-sm rounded-circle me-1"
+                                        onclick="openEditDriverModal('DRV-101', 'Kamal Perera', '0771234567', 'B1234567')"
+                                        title="Edit Driver">
+                                    <i class="fa-solid fa-pen-to-square text-primary"></i>
+                                </button>
+                                <button class="btn btn-light btn-sm rounded-circle me-1"
+                                        onclick="toggleDriverStatus('DRV-101', 'AVAILABLE')" title="Set Available">
+                                    <i class="fa-solid fa-toggle-on text-success"></i>
+                                </button>
+                                <button class="btn btn-light btn-sm rounded-circle" onclick="deleteDriver('DRV-101')"
+                                        title="Delete Driver">
+                                    <i class="fa-solid fa-trash text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">DRV-102</td>
+                            <td class="fw-bold text-dark">Nimal Silva</td>
+                            <td>0719876543</td>
+                            <td>B7654321</td>
+                            <td><span class="badge badge-driver-available rounded-pill px-3 py-2">AVAILABLE</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-light btn-sm rounded-circle me-1"
+                                        onclick="openEditDriverModal('DRV-102', 'Nimal Silva', '0719876543', 'B7654321')"
+                                        title="Edit Driver">
+                                    <i class="fa-solid fa-pen-to-square text-primary"></i>
+                                </button>
+                                <button class="btn btn-light btn-sm rounded-circle me-1"
+                                        onclick="toggleDriverStatus('DRV-102', 'ON_TRIP')" title="Set On Trip">
+                                    <i class="fa-solid fa-toggle-off text-secondary"></i>
+                                </button>
+                                <button class="btn btn-light btn-sm rounded-circle" onclick="deleteDriver('DRV-102')"
+                                        title="Delete Driver">
+                                    <i class="fa-solid fa-trash text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<!-- ================= CREATE SHIPMENT MODAL ================= -->
+<div class="modal fade" id="createShipmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold" style="color: var(--nexa-dark);">Dispatch New Shipment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 p-md-4">
+                <form id="createShipmentForm" onsubmit="handleCreateShipmentSubmit(event)">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Order Code *</label>
+                        <input type="text" class="form-control rounded-pill px-3" id="shipmentOrderCode"
+                               placeholder="e.g. ORD-2026-8801" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Assign Driver Code *</label>
+                        <select class="form-select rounded-pill px-3" id="shipmentDriverCode" required>
+                            <option value="" disabled selected>Select Available Driver</option>
+                            <option value="DRV-101">Kamal Perera (DRV-101)</option>
+                            <option value="DRV-102">Nimal Silva (DRV-102)</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold"
+                                data-bs-dismiss="modal">Cancel
+                        </button>
+                        <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold"
+                                style="background: var(--nexa-primary);">
+                            Dispatch Shipment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= UPDATE SHIPMENT STATUS MODAL ================= -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold" style="color: var(--nexa-dark);">Update Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 p-md-4">
+                <input type="hidden" id="updateTrackingNumberHidden">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Select New Status</label>
+                    <select class="form-select rounded-pill px-3" id="selectNewShipmentStatus">
+                        <option value="PENDING">PENDING</option>
+                        <option value="DISPATCHED">DISPATCHED</option>
+                        <option value="IN_TRANSIT">IN_TRANSIT</option>
+                        <option value="DELIVERED">DELIVERED</option>
+                        <option value="CANCELLED">CANCELLED</option>
+                    </select>
+                </div>
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="button" class="btn btn-light rounded-pill px-3 fw-semibold" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn text-white rounded-pill px-3 fw-semibold"
+                            style="background: var(--nexa-primary);" onclick="submitStatusUpdate()">Update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= ADD / EDIT DRIVER MODAL ================= -->
+<div class="modal fade" id="driverModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold" id="driverModalTitle" style="color: var(--nexa-dark);">Add New Driver</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 p-md-4">
+                <form id="driverForm" onsubmit="handleDriverSubmit(event)">
+                    <input type="hidden" id="driverCodeHidden">
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Driver Name *</label>
+                        <input type="text" class="form-control rounded-pill px-3" id="driverNameInput"
+                               placeholder="e.g. Kamal Perera" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Phone Number (10 digits) *</label>
+                        <input type="text" class="form-control rounded-pill px-3" id="driverPhoneInput"
+                               placeholder="0771234567" pattern="^[0-9]{10}$"
+                               title="Phone number must be exactly 10 digits" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">License Number *</label>
+                        <input type="text" class="form-control rounded-pill px-3" id="driverLicenseInput"
+                               placeholder="e.g. B1234567" required>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold"
+                                data-bs-dismiss="modal">Cancel
+                        </button>
+                        <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold"
+                                style="background: var(--nexa-primary);" id="btnSaveDriver">
+                            Save Driver
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../js/config.js"></script>
+<script src="../../js/admin/shipment.js"></script>
+</body>
+</html>

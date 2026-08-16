@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaSupply - Finance & Audits</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="../../css/admin/payment.css">
+
+</head>
+<body>
+
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR NAVIGATION -->
+<aside class="sidebar" id="sidebar">
+    <div>
+        <div class="brand-logo-area d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <img src="../../images/logo.png" alt="NexaSupply Logo" onerror="this.style.display='none';">
+                <span class="brand-title">NexaSupply</span>
+            </div>
+            <button class="btn text-white d-lg-none p-0" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark fs-4"></i>
+            </button>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-link-custom">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="users.html" class="nav-link-custom">
+                <i class="fa-solid fa-users-gear"></i> User Management
+            </a>
+            <a href="inventory.html" class="nav-link-custom">
+                <i class="fa-solid fa-boxes-stacked"></i> Inventory & Stock
+            </a>
+            <a href="suppliers-restock.html" class="nav-link-custom">
+                <i class="fa-solid fa-truck-field"></i> Suppliers & Restock
+            </a>
+            <a href="orders.html" class="nav-link-custom">
+                <i class="fa-solid fa-cart-flatbed"></i> Master Orders
+            </a>
+            <a href="shipments.html" class="nav-link-custom">
+                <i class="fa-solid fa-route"></i> Logistics & Drivers
+            </a>
+            <a href="payments-ledger.html" class="nav-link-custom active">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Finance & Audits
+            </a>
+        </nav>
+    </div>
+
+    <div class="p-3">
+        <button onclick="window.location.href='../../index.html'" class="btn btn-logout w-100">
+            <i class="fa-solid fa-right-from-bracket me-2"></i> Logout System
+        </button>
+    </div>
+</aside>
+
+<!-- MAIN CONTENT AREA -->
+<main class="main-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="top-navbar">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-light d-lg-none shadow-sm rounded-circle" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div>
+                <h4 class="fw-bold mb-0 fs-5 fs-md-4" style="color: var(--nexa-dark);">Finance, Credit Ledger &
+                    Audits</h4>
+                <span class="text-muted small d-none d-sm-inline">Process order payments, monitor retailer credit balance & audit user actions</span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <div class="user-badge" onclick="window.location.href='profile.html'" style="cursor: pointer;"
+                 title="Click to View Profile">
+                <div class="user-avatar">A</div>
+                <div class="d-none d-md-block">
+                    <div class="fw-bold small" style="color: var(--nexa-dark);">System Admin</div>
+                    <div class="text-muted" style="font-size: 0.72rem;">admin@nexasupply.com</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION TABS (Payments vs Credit Ledger vs Audit Logs) -->
+    <ul class="nav nav-tabs nav-tabs-custom mb-4" id="financeTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="payments-tab" data-bs-toggle="tab" data-bs-target="#paymentsPane"
+                    type="button" role="tab">
+                <i class="fa-solid fa-file-invoice-dollar me-2"></i>Payments Management
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ledger-tab" data-bs-toggle="tab" data-bs-target="#ledgerPane" type="button"
+                    role="tab">
+                <i class="fa-solid fa-book-journal-whills me-2"></i>Retailer Credit Ledger
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="audit-tab" data-bs-toggle="tab" data-bs-target="#auditPane" type="button"
+                    role="tab">
+                <i class="fa-solid fa-clock-rotate-left me-2"></i>Audit Logs
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="financeTabsContent">
+
+        <!-- TAB 1: PAYMENTS MANAGEMENT -->
+        <div class="tab-pane fade show active" id="paymentsPane" role="tabpanel">
+            <div class="content-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">Order Payments</h5>
+                        <p class="text-muted small mb-0">Update and process pending retailer payments for placed
+                            orders</p>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 responsive-control-group">
+                        <input type="text" id="searchPaymentInput" class="form-control rounded-pill px-3"
+                               placeholder="Payment / Order Code..." onkeyup="filterPayments()" style="width: 240px;">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>Payment Code</th>
+                            <th>Order Code</th>
+                            <th>Total Amount</th>
+                            <th>Paid Amount</th>
+                            <th>Due Balance</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="paymentsTableBody">
+                        <!-- Sample UI Row -->
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">PAY-2026-001</td>
+                            <td class="fw-bold text-dark">ORD-2026-8801</td>
+                            <td class="fw-semibold">LKR 150,000.00</td>
+                            <td class="text-success fw-semibold">LKR 100,000.00</td>
+                            <td class="text-danger fw-semibold">LKR 50,000.00</td>
+                            <td><span class="badge badge-pay-partial rounded-pill px-3 py-2">PARTIAL</span></td>
+                            <td class="text-end">
+                                <button class="btn text-white btn-sm rounded-pill px-3"
+                                        style="background: var(--nexa-primary);"
+                                        onclick="openProcessPaymentModal('PAY-2026-001', 50000.00)">
+                                    <i class="fa-solid fa-hand-holding-dollar me-1"></i> Process Pay
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">PAY-2026-002</td>
+                            <td class="fw-bold text-dark">ORD-2026-8802</td>
+                            <td class="fw-semibold">LKR 85,000.00</td>
+                            <td class="text-success fw-semibold">LKR 85,000.00</td>
+                            <td class="text-muted fw-semibold">LKR 0.00</td>
+                            <td><span class="badge badge-pay-paid rounded-pill px-3 py-2">PAID</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-light btn-sm rounded-pill px-3 text-muted" disabled>
+                                    <i class="fa-solid fa-circle-check text-success me-1"></i> Completed
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: RETAILER CREDIT LEDGER -->
+        <div class="tab-pane fade" id="ledgerPane" role="tabpanel">
+            <div class="content-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">Retailer Credit Ledger</h5>
+                        <p class="text-muted small mb-0">Detailed transaction history, order deductions, and payment
+                            restoration logs</p>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 responsive-control-group">
+                        <select class="form-select rounded-pill px-3" id="filterLedgerType" onchange="filterLedgers()"
+                                style="width: 210px;">
+                            <option value="ALL">All Ledger Types</option>
+                            <option value="ORDER_DEDUCTION">ORDER_DEDUCTION</option>
+                            <option value="ORDER_CANCEL_REFUND">ORDER_CANCEL_REFUND</option>
+                            <option value="PAYMENT_RESTORATION">PAYMENT_RESTORATION</option>
+                            <option value="ADMIN_ADJUSTMENT">ADMIN_ADJUSTMENT</option>
+                        </select>
+                        <input type="text" id="searchLedgerInput" class="form-control rounded-pill px-3"
+                               placeholder="Customer / Ref Code / User..." onkeyup="filterLedgers()"
+                               style="width: 250px;">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>Ledger Code</th>
+                            <th>Customer Name</th>
+                            <th>Reference Code</th>
+                            <th>Ledger Type</th>
+                            <th>Amount</th>
+                            <th>Balance After</th>
+                            <th>Date & Time</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody id="ledgerTableBody">
+                        <!-- Sample UI Rows -->
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">LDG-00101</td>
+                            <td>
+                                <div><span class="fw-bold text-dark">Sunil Supermarket</span></div>
+                                <small class="text-muted">USR-RET-101</small>
+                            </td>
+                            <td class="fw-semibold">ORD-2026-8801</td>
+                            <td><span class="badge badge-ledger-deduction rounded-pill px-3 py-1">ORDER_DEDUCTION</span>
+                            </td>
+                            <td class="text-danger fw-semibold">LKR 150,000.00</td>
+                            <td class="fw-bold text-dark">LKR 150,000.00</td>
+                            <td class="text-muted small">16 Aug 2026, 10:15 AM</td>
+                            <td class="text-muted small">Credit limit deducted for order</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" style="color: var(--nexa-primary);">LDG-00102</td>
+                            <td>
+                                <div><span class="fw-bold text-dark">Sunil Supermarket</span></div>
+                                <small class="text-muted">USR-RET-101</small>
+                            </td>
+                            <td class="fw-semibold">PAY-2026-001</td>
+                            <td><span
+                                    class="badge badge-ledger-restoration rounded-pill px-3 py-1">PAYMENT_RESTORATION</span>
+                            </td>
+                            <td class="text-success fw-semibold">LKR 100,000.00</td>
+                            <td class="fw-bold text-dark">LKR 50,000.00</td>
+                            <td class="text-muted small">16 Aug 2026, 02:30 PM</td>
+                            <td class="text-muted small">Credit balance restored after payment</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: AUDIT LOGS -->
+        <div class="tab-pane fade" id="auditPane" role="tabpanel">
+            <div class="content-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">System Audit Logs</h5>
+                        <p class="text-muted small mb-0">Security and action tracking for administrative compliance</p>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 responsive-control-group">
+                        <input type="text" id="searchAuditInput" class="form-control rounded-pill px-3"
+                               placeholder="Search user email or action..." onkeyup="filterAuditLogs()"
+                               style="width: 260px;">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>User Email</th>
+                            <th>Action Performed</th>
+                            <th>Timestamp</th>
+                        </tr>
+                        </thead>
+                        <tbody id="auditTableBody">
+                        <!-- Sample UI Rows -->
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-user-shield text-primary"></i>
+                                    <span class="fw-semibold text-dark">admin@nexasupply.com</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-light text-dark border px-3 py-2">PROCESSED_PAYMENT: PAY-2026-001 (Amount: LKR 100,000.00)</span>
+                            </td>
+                            <td class="text-muted small">16 Aug 2026, 02:30:15 PM</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-user text-secondary"></i>
+                                    <span class="fw-semibold text-dark">kamal.store@gmail.com</span>
+                                </div>
+                            </td>
+                            <td><span
+                                    class="badge bg-light text-dark border px-3 py-2">CREATED_ORDER: ORD-2026-8801</span>
+                            </td>
+                            <td class="text-muted small">16 Aug 2026, 10:15:02 AM</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<!-- ================= PROCESS PAYMENT MODAL ================= -->
+<div class="modal fade" id="processPaymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold" style="color: var(--nexa-dark);">Process Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 p-md-4">
+                <form id="processPaymentForm" onsubmit="handleProcessPaymentSubmit(event)">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Payment Code</label>
+                        <input type="text" class="form-control rounded-pill px-3 bg-light" id="payModalPaymentCode"
+                               readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Paying Amount (LKR) *</label>
+                        <input type="number" step="0.01" min="0.01" class="form-control rounded-pill px-3"
+                               id="payModalAmount" placeholder="e.g. 50000.00" required>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold"
+                                data-bs-dismiss="modal">Cancel
+                        </button>
+                        <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold"
+                                style="background: var(--nexa-primary);">
+                            Confirm Payment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../js/config.js"></script>
+<script src="../../js/admin/payment.js"></script>
+</body>
+</html>

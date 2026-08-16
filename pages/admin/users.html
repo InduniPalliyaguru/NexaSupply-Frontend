@@ -12,95 +12,7 @@
     <!-- Admin CSS -->
     <link rel="stylesheet" href="../../css/admin.css">
 
-    <style>
-        :root {
-            --sidebar-width: 260px;
-        }
 
-        body {
-            overflow-x: hidden;
-            background-color: #f8fafc;
-        }
-
-        /* Sidebar Responsive Layout */
-        .sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1050;
-            transition: transform 0.3s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .main-wrapper {
-            margin-left: var(--sidebar-width);
-            min-height: 100vh;
-            padding: 1.5rem;
-            transition: margin-left 0.3s ease-in-out;
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(2px);
-            z-index: 1040;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar-overlay.show {
-            display: block;
-            opacity: 1;
-        }
-
-        /* Mobile & Tablet Breaks */
-        @media (max-width: 991.98px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-            .main-wrapper {
-                margin-left: 0 !important;
-                padding: 1rem;
-            }
-        }
-
-        /* Topbar & Control Formatting */
-        .top-navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        @media (max-width: 575.98px) {
-            .responsive-control-group {
-                width: 100%;
-                flex-direction: column;
-                align-items: stretch !important;
-            }
-
-            .responsive-control-group select,
-            .responsive-control-group input {
-                width: 100% !important;
-            }
-        }
-    </style>
 </head>
 <body>
 
@@ -170,11 +82,13 @@
         </div>
 
         <div class="d-flex align-items-center gap-2 gap-sm-3">
-            <button class="btn text-white rounded-pill px-3 fw-bold btn-sm btn-md-md text-nowrap" style="background: var(--nexa-primary);" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+            <button class="btn text-white rounded-pill px-3 fw-bold btn-sm btn-md-md text-nowrap"
+                    style="background: var(--nexa-primary);" data-bs-toggle="modal" data-bs-target="#addAdminModal">
                 <i class="fa-solid fa-user-plus me-1"></i> Add New Admin
             </button>
 
-            <div class="user-badge" onclick="window.location.href='profile.html'" style="cursor: pointer;" title="Click to View Profile">
+            <div class="user-badge" onclick="window.location.href='profile.html'" style="cursor: pointer;"
+                 title="Click to View Profile">
                 <div class="user-avatar">A</div>
                 <div class="d-none d-md-block">
                     <div class="fw-bold small" style="color: var(--nexa-dark);">System Admin</div>
@@ -216,10 +130,12 @@
                     <td>0771234567</td>
                     <td>No 45, Main St, Kandy</td>
                     <td class="text-end">
-                        <button class="btn btn-success btn-sm rounded-pill px-3 me-1" onclick="openApproveModal('RET-1001')">
+                        <button class="btn btn-success btn-sm rounded-pill px-3 me-1"
+                                onclick="openApproveModal('RET-1001')">
                             <i class="fa-solid fa-check me-1"></i> Approve
                         </button>
-                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="rejectUser('RET-1001')">
+                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                onclick="rejectUser('RET-1001')">
                             <i class="fa-solid fa-xmark me-1"></i> Reject
                         </button>
                     </td>
@@ -242,13 +158,15 @@
             <!-- SEARCH AND ROLE FILTER OPTIONS -->
             <div class="d-flex align-items-center gap-2 responsive-control-group">
                 <!-- GET USERS BY ROLE FILTER -->
-                <select id="roleFilter" class="form-select rounded-pill px-3" style="width: 170px;" onchange="filterUsersByRole(this.value)">
+                <select id="roleFilter" class="form-select rounded-pill px-3" style="width: 170px;"
+                        onchange="filterUsersByRole(this.value)">
                     <option value="ALL" selected>All Roles</option>
                     <option value="ADMIN">ADMINS Only</option>
                     <option value="RETAILER">RETAILERS Only</option>
                 </select>
 
-                <input type="text" id="searchUser" class="form-control rounded-pill px-3" placeholder="Search code/email..." style="width: 200px;">
+                <input type="text" id="searchUser" class="form-control rounded-pill px-3"
+                       placeholder="Search code/email..." style="width: 200px;">
             </div>
         </div>
 
@@ -285,7 +203,8 @@
                 <!-- Sample UI Row: Admin -->
                 <tr>
                     <td class="fw-bold" style="color: var(--nexa-primary);">ADM-1001</td>
-                    <td><span class="badge bg-purple text-white rounded-pill" style="background: var(--nexa-primary);">ADMIN</span></td>
+                    <td><span class="badge bg-purple text-white rounded-pill" style="background: var(--nexa-primary);">ADMIN</span>
+                    </td>
                     <td>System Super Admin</td>
                     <td>admin@nexasupply.com</td>
                     <td>0770000000</td>
@@ -317,19 +236,23 @@
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
                             <label class="form-label small fw-bold">Full Name *</label>
-                            <input type="text" class="form-control rounded-pill px-3" id="adminFullName" placeholder="e.g. Nimal Fernando" minlength="3" maxlength="100" required>
+                            <input type="text" class="form-control rounded-pill px-3" id="adminFullName"
+                                   placeholder="e.g. Nimal Fernando" minlength="3" maxlength="100" required>
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label small fw-bold">Email Address *</label>
-                            <input type="email" class="form-control rounded-pill px-3" id="adminEmail" placeholder="admin@nexasupply.com" required>
+                            <input type="email" class="form-control rounded-pill px-3" id="adminEmail"
+                                   placeholder="admin@nexasupply.com" required>
                         </div>
 
                         <!-- PASSWORD FIELD WITH SHOW/HIDE TOGGLE -->
                         <div class="col-12 col-md-6">
                             <label class="form-label small fw-bold">Password *</label>
                             <div class="input-group">
-                                <input type="password" class="form-control border-end-0 rounded-start-pill px-3" id="adminPassword" placeholder="••••••••" required>
-                                <button class="btn btn-outline-secondary border-start-0 rounded-end-pill px-3" type="button" onclick="togglePasswordVisibility()">
+                                <input type="password" class="form-control border-end-0 rounded-start-pill px-3"
+                                       id="adminPassword" placeholder="••••••••" required>
+                                <button class="btn btn-outline-secondary border-start-0 rounded-end-pill px-3"
+                                        type="button" onclick="togglePasswordVisibility()">
                                     <i class="fa-solid fa-eye" id="togglePasswordIcon"></i>
                                 </button>
                             </div>
@@ -337,21 +260,27 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label small fw-bold">Phone Number (10 Digits) *</label>
-                            <input type="text" class="form-control rounded-pill px-3" id="adminPhone" placeholder="0771234567" pattern="^[0-9]{10}$" required>
+                            <input type="text" class="form-control rounded-pill px-3" id="adminPhone"
+                                   placeholder="0771234567" pattern="^[0-9]{10}$" required>
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label small fw-bold">Office / Department Name</label>
-                            <input type="text" class="form-control rounded-pill px-3" id="adminShopName" placeholder="e.g. Head Office Admin">
+                            <input type="text" class="form-control rounded-pill px-3" id="adminShopName"
+                                   placeholder="e.g. Head Office Admin">
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label small fw-bold">Address</label>
-                            <input type="text" class="form-control rounded-pill px-3" id="adminAddress" placeholder="e.g. Colombo, Sri Lanka">
+                            <input type="text" class="form-control rounded-pill px-3" id="adminAddress"
+                                   placeholder="e.g. Colombo, Sri Lanka">
                         </div>
                     </div>
 
                     <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
-                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold" style="background: var(--nexa-primary);">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold"
+                                data-bs-dismiss="modal">Cancel
+                        </button>
+                        <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold"
+                                style="background: var(--nexa-primary);">
                             Create Admin Account
                         </button>
                     </div>
@@ -370,7 +299,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3 p-md-4">
-                <p class="text-muted small mb-3">Set an initial Credit Limit for this retailer to enable order placement.</p>
+                <p class="text-muted small mb-3">Set an initial Credit Limit for this retailer to enable order
+                    placement.</p>
 
                 <form id="approveUserForm">
                     <input type="hidden" id="approveUserCode">
@@ -379,13 +309,17 @@
                         <label class="form-label small fw-bold">Allocated Credit Limit (LKR)</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0 fw-bold">LKR</span>
-                            <input type="number" class="form-control border-start-0" id="creditLimitInput" placeholder="e.g. 250000" step="1000" min="0" required>
+                            <input type="number" class="form-control border-start-0" id="creditLimitInput"
+                                   placeholder="e.g. 250000" step="1000" min="0" required>
                         </div>
                     </div>
 
                     <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
-                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold" style="background: var(--nexa-primary);">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold"
+                                data-bs-dismiss="modal">Cancel
+                        </button>
+                        <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold"
+                                style="background: var(--nexa-primary);">
                             Confirm & Approve
                         </button>
                     </div>
@@ -396,64 +330,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    let approveModalBS;
-
-    document.addEventListener('DOMContentLoaded', () => {
-        approveModalBS = new bootstrap.Modal(document.getElementById('approveCreditModal'));
-    });
-
-    // Mobile Sidebar Drawer Toggle Function
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-
-        sidebar.classList.toggle('show');
-        overlay.classList.toggle('show');
-    }
-
-    // PASSWORD VISIBILITY TOGGLE FUNCTION
-    function togglePasswordVisibility() {
-        const pwdInput = document.getElementById('adminPassword');
-        const icon = document.getElementById('togglePasswordIcon');
-
-        if (pwdInput.type === 'password') {
-            pwdInput.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            pwdInput.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-
-    // ROLE FILTER HANDLER
-    function filterUsersByRole(selectedRole) {
-        if (selectedRole === 'ALL') {
-            // Fetch GET /api/v1/admin/users
-        } else {
-            // Fetch GET /api/v1/admin/users/role/{selectedRole}
-        }
-    }
-
-    function openApproveModal(userCode) {
-        document.getElementById('approveUserCode').value = userCode;
-        document.getElementById('creditLimitInput').value = '';
-        approveModalBS.show();
-    }
-
-    function rejectUser(userCode) {
-        if(confirm(`Are you sure you want to reject user ${userCode}?`)) {
-            // Executed: PUT /api/v1/admin/users/reject/{userCode}
-        }
-    }
-
-    function deleteUser(userCode) {
-        if(confirm(`Are you sure you want to delete user ${userCode}?`)) {
-            // Executed: DELETE /api/v1/admin/users/{userCode}
-        }
-    }
-</script>
+<script src="../../js/config.js"></script>
+<script src="../../js/admin/user.js"></script>
 </body>
 </html>

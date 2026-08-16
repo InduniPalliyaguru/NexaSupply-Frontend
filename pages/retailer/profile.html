@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexaSupply - Admin Profile</title>
+    <title>NexaSupply - Retailer Profile</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Admin CSS -->
+    <!-- Theme Specific CSS -->
     <link rel="stylesheet" href="../../css/admin.css">
-    <link rel="stylesheet" href="../../css/admin/profile.css">
+    <link rel="stylesheet" href="../../css/retailer/profile.css">
 
 </head>
 <body>
@@ -19,7 +19,7 @@
 <!-- MOBILE SIDEBAR OVERLAY -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-<!-- SIDEBAR NAVIGATION -->
+<!-- RETAILER SIDEBAR NAVIGATION -->
 <aside class="sidebar" id="sidebar">
     <div>
         <div class="brand-logo-area d-flex align-items-center justify-content-between">
@@ -36,23 +36,14 @@
             <a href="dashboard.html" class="nav-link-custom">
                 <i class="fa-solid fa-chart-pie"></i> Dashboard
             </a>
-            <a href="users.html" class="nav-link-custom">
-                <i class="fa-solid fa-users-gear"></i> User Management
+            <a href="storefront.html" class="nav-link-custom">
+                <i class="fa-solid fa-store"></i> Product Store
             </a>
-            <a href="inventory.html" class="nav-link-custom">
-                <i class="fa-solid fa-boxes-stacked"></i> Inventory & Stock
+            <a href="my-orders.html" class="nav-link-custom">
+                <i class="fa-solid fa-bag-shopping"></i> My Orders
             </a>
-            <a href="suppliers-restock.html" class="nav-link-custom">
-                <i class="fa-solid fa-truck-field"></i> Suppliers & Restock
-            </a>
-            <a href="orders.html" class="nav-link-custom">
-                <i class="fa-solid fa-cart-flatbed"></i> Master Orders
-            </a>
-            <a href="shipments.html" class="nav-link-custom">
-                <i class="fa-solid fa-route"></i> Logistics & Drivers
-            </a>
-            <a href="payments-ledger.html" class="nav-link-custom">
-                <i class="fa-solid fa-file-invoice-dollar"></i> Finance & Audits
+            <a href="my-finance.html" class="nav-link-custom">
+                <i class="fa-solid fa-wallet"></i> Credit Ledger
             </a>
         </nav>
     </div>
@@ -74,17 +65,17 @@
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div>
-                <h4 class="fw-bold mb-0 fs-5 fs-md-4" style="color: var(--nexa-dark);">My Profile Settings</h4>
-                <span class="text-muted small d-none d-sm-inline">Manage personal account details and credentials</span>
+                <h4 class="fw-bold mb-0 fs-5 fs-md-4" style="color: var(--nexa-dark);">My Profile & Shop Settings</h4>
+                <span class="text-muted small d-none d-sm-inline">Manage personal details, shop information, and contact info</span>
             </div>
         </div>
 
         <div class="d-flex align-items-center gap-2">
             <div class="user-badge" style="cursor: default;">
-                <div class="user-avatar" id="headerAvatar">A</div>
+                <div class="user-avatar" id="headerAvatar">R</div>
                 <div class="d-none d-md-block">
-                    <div class="fw-bold small" id="headerName" style="color: var(--nexa-dark);">System Admin</div>
-                    <div class="text-muted" id="headerEmail" style="font-size: 0.72rem;">admin@nexasupply.com</div>
+                    <div class="fw-bold small" id="headerName" style="color: var(--nexa-dark);">Retailer User</div>
+                    <div class="text-muted" id="headerEmail" style="font-size: 0.72rem;">retailer@nexasupply.com</div>
                 </div>
             </div>
         </div>
@@ -92,28 +83,39 @@
 
     <!-- PROFILE VIEW & UPDATE CONTENT -->
     <div class="row g-4">
-        <!-- LEFT COLUMN: ACCOUNT SUMMARY CARD -->
+        <!-- LEFT COLUMN: RETAILER ACCOUNT SUMMARY CARD -->
         <div class="col-12 col-lg-4">
-            <div class="content-card text-center p-4 h-100">
-                <div class="d-flex justify-content-center mb-3">
-                    <div class="profile-avatar-large" id="profileAvatarLarge">A</div>
-                </div>
-                <h5 class="fw-bold mb-1" id="profileDisplayName" style="color: var(--nexa-dark);">Admin User</h5>
-                <p class="text-muted small mb-3" id="profileDisplayEmail">admin@nexasupply.com</p>
-
-                <div class="d-flex justify-content-center gap-2 mb-4">
-                    <span class="badge bg-purple text-white px-3 py-2 rounded-pill" id="badgeRole"
-                          style="background: var(--nexa-primary);">ADMIN</span>
-                    <span class="pill-badge badge-approved px-3 py-2" id="badgeStatus">ACTIVE</span>
-                </div>
-
-                <hr class="my-3">
-
-                <div class="text-start">
-                    <div class="mb-2">
-                        <span class="text-muted small d-block">System User Code</span>
-                        <span class="fw-bold" id="lblUserCode" style="color: var(--nexa-primary);">ADM-1001</span>
+            <div class="content-card text-center p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex justify-content-center mb-3">
+                        <div class="profile-avatar-large" id="profileAvatarLarge">R</div>
                     </div>
+                    <h5 class="fw-bold mb-1" id="profileDisplayName" style="color: var(--nexa-dark);">SuperMart
+                        Perera</h5>
+                    <p class="text-muted small mb-1" id="profileDisplayShop"><i
+                            class="fa-solid fa-store me-1 text-primary"></i> SuperMart City</p>
+                    <p class="text-muted small mb-3" id="profileDisplayEmail">retailer@nexasupply.com</p>
+
+                    <div class="d-flex justify-content-center gap-2 mb-4">
+                        <span class="badge bg-purple text-white px-3 py-2 rounded-pill" id="badgeRole"
+                              style="background: var(--nexa-primary);">RETAILER</span>
+                        <span class="pill-badge badge-approved px-3 py-2" id="badgeStatus">APPROVED</span>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="text-start mb-3">
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Retailer User Code</span>
+                            <span class="fw-bold" id="lblUserCode" style="color: var(--nexa-primary);">RET-4092</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Limit Summary Box -->
+                <div class="credit-badge-box text-start mt-3">
+                    <span class="text-muted small d-block fw-semibold">Assigned Credit Limit</span>
+                    <h5 class="fw-bold text-success mb-0" id="lblCreditLimit">LKR 500,000.00</h5>
                 </div>
             </div>
         </div>
@@ -122,7 +124,8 @@
         <div class="col-12 col-lg-8">
             <div class="content-card p-4">
                 <h5 class="fw-bold mb-3" style="color: var(--nexa-dark);">
-                    <i class="fa-solid fa-user-pen me-2" style="color: var(--nexa-primary);"></i>Edit Profile Details
+                    <i class="fa-solid fa-user-pen me-2" style="color: var(--nexa-primary);"></i>Edit Profile & Business
+                    Info
                 </h5>
 
                 <form id="profileUpdateForm" onsubmit="handleProfileUpdate(event)">
@@ -150,11 +153,23 @@
                                    readonly>
                         </div>
 
-                        <!-- EDITABLE FIELDS (UpdateProfileDTO) -->
                         <div class="col-12">
+                            <label class="form-label small fw-bold">Allocated Credit Limit (Read-Only)</label>
+                            <input type="text" class="form-control rounded-pill px-3 bg-light text-success fw-bold"
+                                   id="txtCreditLimit" readonly>
+                        </div>
+
+                        <!-- EDITABLE FIELDS (Matching UpdateProfileDTO) -->
+                        <div class="col-12 col-md-6">
                             <label class="form-label small fw-bold">Full Name *</label>
                             <input type="text" class="form-control rounded-pill px-3" id="txtFullName"
                                    placeholder="Enter full name" required>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-bold">Shop / Business Name *</label>
+                            <input type="text" class="form-control rounded-pill px-3" id="txtShopName"
+                                   placeholder="Enter shop name" required>
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -164,16 +179,16 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label class="form-label small fw-bold">Address</label>
+                            <label class="form-label small fw-bold">Physical / Business Address</label>
                             <input type="text" class="form-control rounded-pill px-3" id="txtAddress"
-                                   placeholder="Enter physical address">
+                                   placeholder="Enter business address">
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 mt-4">
                         <button type="submit" class="btn text-white rounded-pill px-4 fw-semibold"
                                 style="background: var(--nexa-primary);" id="btnSaveProfile">
-                            <i class="fa-solid fa-floppy-disk me-1"></i> Update Profile
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Update Profile Details
                         </button>
                     </div>
                 </form>
@@ -186,6 +201,6 @@
 <!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../js/config.js"></script>
-<script src="../../js/admin/profile.js"></script>
+<script src="../../js/retailer/profile.js"></script>
 </body>
 </html>

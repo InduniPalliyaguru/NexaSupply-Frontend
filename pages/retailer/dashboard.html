@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaSupply - Retailer Dashboard</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Admin/Theme Specific CSS -->
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="../../css/retailer/dashboard.css">
+
+</head>
+<body>
+
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- RETAILER SIDEBAR NAVIGATION -->
+<aside class="sidebar" id="sidebar">
+    <div>
+        <div class="brand-logo-area d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <img src="../../images/logo.png" alt="NexaSupply Logo" onerror="this.style.display='none';">
+                <span class="brand-title">NexaSupply</span>
+            </div>
+            <button class="btn text-white d-lg-none p-0" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark fs-4"></i>
+            </button>
+        </div>
+
+        <!-- Sidebar Navigation Menu (Profile Removed) -->
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-link-custom active">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="storefront.html" class="nav-link-custom">
+                <i class="fa-solid fa-store"></i> Product Store
+            </a>
+            <a href="my-orders.html" class="nav-link-custom">
+                <i class="fa-solid fa-bag-shopping"></i> My Orders
+            </a>
+            <a href="my-finance.html" class="nav-link-custom">
+                <i class="fa-solid fa-wallet"></i> Credit Ledger
+            </a>
+        </nav>
+    </div>
+
+    <div class="p-3">
+        <button onclick="window.location.href='../../index.html'" class="btn btn-logout w-100">
+            <i class="fa-solid fa-right-from-bracket me-2"></i> Logout System
+        </button>
+    </div>
+</aside>
+
+<!-- MAIN CONTENT AREA -->
+<main class="main-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="top-navbar">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-light d-lg-none shadow-sm rounded-circle" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div>
+                <h4 class="fw-bold mb-0 fs-5 fs-md-4" style="color: var(--nexa-dark);">Retailer Dashboard</h4>
+                <span class="text-muted small d-none d-sm-inline">Overview of your purchasing and orders</span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 gap-sm-3">
+            <!-- NOTIFICATION BELL DROPDOWN -->
+            <div class="dropdown">
+                <button class="btn btn-light rounded-circle position-relative p-2" type="button"
+                        id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bell fa-lg text-secondary"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                          id="unreadBadge">
+                        1
+                    </span>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-3 notification-menu-custom"
+                     aria-labelledby="notificationDropdown" style="width: 360px; max-height: 480px; overflow-y: auto;">
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                        <h6 class="fw-bold mb-0" style="color: var(--nexa-dark);">Notifications</h6>
+                        <button class="btn btn-link btn-sm p-0 text-decoration-none fw-semibold"
+                                style="color: var(--nexa-primary); font-size: 0.8rem;">
+                            Mark all as read
+                        </button>
+                    </div>
+
+                    <div id="notificationList">
+                        <div class="notification-item p-2 rounded-3 unread position-relative">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="fw-bold small text-dark">Order Dispatch Alert</div>
+                                <button class="btn btn-link btn-sm text-danger p-0 ms-2"><i
+                                        class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="text-muted small my-1" style="font-size: 0.78rem;">
+                                Your order #ORD-1092 has been dispatched.
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-1">
+                                <span class="text-muted" style="font-size: 0.7rem;">5 mins ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USER PROFILE BADGE (Clickable Redirection to profile.html) -->
+            <div class="user-badge user-badge-hover p-1 px-2 d-flex align-items-center gap-2"
+                 onclick="window.location.href='profile.html'"
+                 title="Click to View Profile">
+                <div class="user-avatar">R</div>
+                <div class="d-none d-md-block">
+                    <div class="fw-bold small text-start" style="color: var(--nexa-dark);" id="profileName">Retailer
+                        Shop
+                    </div>
+                    <div class="text-muted" style="font-size: 0.72rem;">My Profile <i
+                            class="fa-solid fa-chevron-right ms-1" style="font-size: 0.6rem;"></i></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- KPI METRIC CARDS (Matching RetailerDashboardDTO) -->
+    <div class="row g-2 g-md-4 mb-4">
+
+        <!-- 1. Available Credit Limit -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper icon-blue">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div class="text-muted small fw-semibold">Available Credit Limit</div>
+                <div class="stat-value my-1" id="statAvailableCredit">LKR 0.00</div>
+                <span class="text-success small fw-bold"><i class="fa-solid fa-circle-check me-1"></i>Ready to Purchase</span>
+            </div>
+        </div>
+
+        <!-- 2. Pending Orders Count -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper icon-amber">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="text-muted small fw-semibold">Pending Orders</div>
+                <div class="stat-value my-1" id="statPendingOrders">0</div>
+                <span class="text-warning small fw-bold"><i class="fa-solid fa-hourglass-half me-1"></i>Awaiting Approval</span>
+            </div>
+        </div>
+
+        <!-- 3. Total Orders Count -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper icon-purple">
+                    <i class="fa-solid fa-boxes-packing"></i>
+                </div>
+                <div class="text-muted small fw-semibold">Total Orders</div>
+                <div class="stat-value my-1" id="statTotalOrders">0</div>
+                <span class="text-primary small fw-bold"><i
+                        class="fa-solid fa-layer-group me-1"></i>All Time Orders</span>
+            </div>
+        </div>
+
+        <!-- 4. Total Spent Amount -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper icon-rose">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                </div>
+                <div class="text-muted small fw-semibold">Total Spent Amount</div>
+                <div class="stat-value my-1" id="statTotalSpent">LKR 0.00</div>
+                <span class="text-danger small fw-bold"><i
+                        class="fa-solid fa-chart-pie me-1"></i>Total Lifetime Spent</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RECENT ORDERS SECTION (Matching RecentOrderDTO Structure) -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="content-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-bold mb-1" style="color: var(--nexa-dark);">Recent Orders</h5>
+                        <p class="text-muted small mb-0">Overview of your recent procurement orders</p>
+                    </div>
+                    <a href="my-orders.html" class="btn btn-sm btn-outline-primary fw-semibold">
+                        View All Orders <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom align-middle text-nowrap">
+                        <thead>
+                        <tr>
+                            <th>Order Code</th>
+                            <th>Order Date</th>
+                            <th class="text-end">Total Price</th>
+                            <th class="text-center">Order Status</th>
+                        </tr>
+                        </thead>
+                        <tbody id="recentOrdersTableBody">
+                        <!-- Static Placeholders for UI preview -->
+                        <tr>
+                            <td class="fw-bold text-primary">#ORD-1092</td>
+                            <td class="text-muted small">2026-08-16 10:30 AM</td>
+                            <td class="text-end fw-bold text-dark">LKR 45,000.00</td>
+                            <td class="text-center">
+                                <span class="badge bg-warning-subtle text-warning border border-warning px-3 py-2">PENDING</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-primary">#ORD-1088</td>
+                            <td class="text-muted small">2026-08-14 02:15 PM</td>
+                            <td class="text-end fw-bold text-dark">LKR 120,500.00</td>
+                            <td class="text-center">
+                                <span class="badge bg-success-subtle text-success border border-success px-3 py-2">APPROVED</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="../../js/config.js"></script>
+<script src="../../js/retailer/dashboard.js"></script>
+</body>
+</html>
