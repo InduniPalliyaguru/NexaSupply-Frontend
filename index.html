@@ -47,7 +47,7 @@
 
     <!-- ================= 1. LOGIN FORM ================= -->
     <div id="loginSection">
-        <form id="loginForm" onsubmit="handleLogin(event)">
+        <form id="loginForm">
 
             <!-- Email Input -->
             <div class="pill-input-group">
@@ -139,41 +139,5 @@
 <script src="js/config.js"></script>
 <script src="js/auth.js"></script>
 
-<script>
-    function togglePasswordVisibility(inputId, iconElem) {
-        const input = document.getElementById(inputId);
-        if (input.type === "password") {
-            input.type = "text";
-            iconElem.classList.remove("fa-eye-slash");
-            iconElem.classList.add("fa-eye");
-        } else {
-            input.type = "password";
-            iconElem.classList.remove("fa-eye");
-            iconElem.classList.add("fa-eye-slash");
-        }
-    }
-
-    let isSignUp = false;
-
-    function toggleAuthMode() {
-        isSignUp = !isSignUp;
-        const loginSec = document.getElementById('loginSection');
-        const signupSec = document.getElementById('signupSection');
-        const formTitle = document.getElementById('formTitle');
-        const togglePrompt = document.getElementById('togglePrompt');
-
-        if (isSignUp) {
-            loginSec.style.display = 'none';
-            signupSec.style.display = 'block';
-            formTitle.innerText = "Sign Up";
-            togglePrompt.innerHTML = 'Already have an account? <a href="javascript:void(0)" onclick="toggleAuthMode()" class="toggle-auth-link">Login here</a>';
-        } else {
-            loginSec.style.display = 'block';
-            signupSec.style.display = 'none';
-            formTitle.innerText = "Login";
-            togglePrompt.innerHTML = 'Don\'t have an account? <a href="javascript:void(0)" onclick="toggleAuthMode()" class="toggle-auth-link">Create your account</a>, it takes less than a minute.';
-        }
-    }
-</script>
 </body>
 </html>
