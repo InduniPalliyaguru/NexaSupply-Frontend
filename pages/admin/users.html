@@ -123,23 +123,23 @@
                 </thead>
                 <tbody id="pendingUsersTable">
                 <!-- Sample UI Row -->
-                <tr>
-                    <td class="fw-bold">Lanka Super Mart</td>
-                    <td>Kamal Perera</td>
-                    <td>kamal@lankamart.lk</td>
-                    <td>0771234567</td>
-                    <td>No 45, Main St, Kandy</td>
-                    <td class="text-end">
-                        <button class="btn btn-success btn-sm rounded-pill px-3 me-1"
-                                onclick="openApproveModal('RET-1001')">
-                            <i class="fa-solid fa-check me-1"></i> Approve
-                        </button>
-                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3"
-                                onclick="rejectUser('RET-1001')">
-                            <i class="fa-solid fa-xmark me-1"></i> Reject
-                        </button>
-                    </td>
-                </tr>
+<!--                <tr>-->
+<!--                    <td class="fw-bold">Lanka Super Mart</td>-->
+<!--                    <td>Kamal Perera</td>-->
+<!--                    <td>kamal@lankamart.lk</td>-->
+<!--                    <td>0771234567</td>-->
+<!--                    <td>No 45, Main St, Kandy</td>-->
+<!--                    <td class="text-end">-->
+<!--                        <button class="btn btn-success btn-sm rounded-pill px-3 me-1"-->
+<!--                                onclick="openApproveModal('RET-1001')">-->
+<!--                            <i class="fa-solid fa-check me-1"></i> Approve-->
+<!--                        </button>-->
+<!--                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3"-->
+<!--                                onclick="rejectUser('RET-1001')">-->
+<!--                            <i class="fa-solid fa-xmark me-1"></i> Reject-->
+<!--                        </button>-->
+<!--                    </td>-->
+<!--                </tr>-->
                 </tbody>
             </table>
         </div>
@@ -161,8 +161,8 @@
                 <select id="roleFilter" class="form-select rounded-pill px-3" style="width: 170px;"
                         onchange="filterUsersByRole(this.value)">
                     <option value="ALL" selected>All Roles</option>
-                    <option value="ADMIN">ADMINS Only</option>
-                    <option value="RETAILER">RETAILERS Only</option>
+                    <option value="ROLE_ADMIN">ADMINS Only</option>
+                    <option value="ROLE_RETAILER">RETAILERS Only</option>
                 </select>
 
                 <input type="text" id="searchUser" class="form-control rounded-pill px-3"
@@ -262,11 +262,6 @@
                             <label class="form-label small fw-bold">Phone Number (10 Digits) *</label>
                             <input type="text" class="form-control rounded-pill px-3" id="adminPhone"
                                    placeholder="0771234567" pattern="^[0-9]{10}$" required>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="form-label small fw-bold">Office / Department Name</label>
-                            <input type="text" class="form-control rounded-pill px-3" id="adminShopName"
-                                   placeholder="e.g. Head Office Admin">
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label small fw-bold">Address</label>

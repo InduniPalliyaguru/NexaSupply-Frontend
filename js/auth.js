@@ -105,6 +105,7 @@ async function handleRegister(event) {
             showAuthAlert(result.message || "Registration failed!");
         }
     } catch (error) {
+        console.log(error);
         showAuthAlert("Server connection error!");
     }
 }
