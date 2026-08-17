@@ -61,26 +61,31 @@ async function handleLogin(event) {
                 showAuthAlert("Role match failed! Got role: " + role);
             }
         } else {
-            showAuthAlert(result.message || "Invalid credentials!");
+            const errorMsg = (result.message || "").toLowerCase();
+
+            if (errorMsg.includes("pending")) {
+                console.log("Account is pending approval. Redirecting...");
+                window.location.replace('pages/auth/pending-approval.html');
+            } else {
+                showAuthAlert(result.message || "Invalid credentials!");
+            }
         }
     } catch (error) {
         console.error("Login Error:", error);
         showAuthAlert("Cannot connect to Backend Server!");
     }
 }
-
 // REGISTER FUNCTION
 async function handleRegister(event) {
     event.preventDefault();
 
     const registerPayload = {
-        name: document.getElementById('regFullName').value.trim(),
+        fullName: document.getElementById('regFullName').value.trim(),
         email: document.getElementById('regEmail').value.trim(),
+        password: document.getElementById('regPassword').value.trim(),
         shopName: document.getElementById('regShopName').value.trim(),
         phone: document.getElementById('regPhone').value.trim(),
         address: document.getElementById('regAddress').value.trim(),
-        password: document.getElementById('regPassword').value.trim(),
-        role: "RETAILER"
     };
 
     try {

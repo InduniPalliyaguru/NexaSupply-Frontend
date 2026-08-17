@@ -28,14 +28,14 @@
             border: 1px solid #e2e8f0;
             border-radius: 24px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            max-width: 520px;
+            max-width: 480px;
             width: 100%;
             overflow: hidden;
         }
 
         .pending-icon-wrapper {
-            width: 85px;
-            height: 85px;
+            width: 90px;
+            height: 90px;
             background-color: #fef3c7;
             color: #d97706;
             border-radius: 50%;
@@ -51,7 +51,7 @@
                 box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4);
             }
             70% {
-                box-shadow: 0 0 0 15px rgba(217, 119, 6, 0);
+                box-shadow: 0 0 0 18px rgba(217, 119, 6, 0);
             }
             100% {
                 box-shadow: 0 0 0 0 rgba(217, 119, 6, 0);
@@ -61,19 +61,13 @@
         .status-badge-pending {
             background-color: #fef3c7;
             color: #d97706;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             font-weight: 700;
-            padding: 0.4em 1em;
+            padding: 0.5em 1.2em;
             border-radius: 50px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-        }
-
-        .info-box {
-            background-color: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
+            display: inline-block;
         }
     </style>
 </head>
@@ -93,30 +87,18 @@
         <i class="fa-solid fa-clock-rotate-left fs-1"></i>
     </div>
 
-    <!-- MAIN HEADING & MESSAGE -->
-    <h4 class="fw-bold text-dark mb-2">Account Pending Approval</h4>
-    <p class="text-muted small mb-4">
-        Your retailer account has been registered successfully and is currently under administrative review. You will
-        gain full access once your account is verified.
-    </p>
+    <!-- MAIN HEADING & STATUS BADGE -->
+    <h4 class="fw-bold text-dark mb-3">Account Pending Approval</h4>
 
-    <!-- USER ACCOUNT SUMMARY -->
-    <div class="info-box mb-4 text-start">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="text-muted small fw-semibold">Account Email:</span>
-            <span class="fw-bold text-dark small" id="lblUserEmail">retailer@nexasupply.com</span>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="text-muted small fw-semibold">Reference Code:</span>
-            <span class="badge bg-light text-dark border" id="lblUserRefCode">RET-PENDING</span>
-        </div>
-        <div class="d-flex justify-content-between align-items-center">
-            <span class="text-muted small fw-semibold">Review Status:</span>
-            <span class="status-badge-pending">
-                <i class="fa-solid fa-hourglass-half me-1"></i> PENDING APPROVAL
-            </span>
-        </div>
+    <div class="mb-3">
+        <span class="status-badge-pending">
+            <i class="fa-solid fa-hourglass-half me-1"></i> PENDING APPROVAL
+        </span>
     </div>
+
+    <p class="text-muted small mb-4">
+        Your retailer account is currently under administrative review. You will gain full access to the system once your account is verified by an admin.
+    </p>
 
     <!-- BACK TO LOGIN BUTTON -->
     <button type="button" class="btn btn-primary rounded-pill py-2.5 fw-semibold w-100" onclick="goToLogin()">
@@ -125,7 +107,7 @@
 
     <!-- SUPPORT CONTACT -->
     <div class="mt-4 pt-3 border-top text-muted small">
-        Need assistance? Contact Administrator at
+        Need assistance? Contact Administrator at<br>
         <a href="mailto:support@nexasupply.com" class="text-decoration-none fw-semibold">support@nexasupply.com</a>
     </div>
 
@@ -135,15 +117,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Populate stored details if available
-        const userEmail = localStorage.getItem('userEmail') || 'retailer@nexasupply.com';
-        const userRefCode = localStorage.getItem('referenceCode') || 'RET-PENDING';
-
-        document.getElementById('lblUserEmail').innerText = userEmail;
-        document.getElementById('lblUserRefCode').innerText = userRefCode;
-    });
-
     // Clear session and return to Login
     function goToLogin() {
         localStorage.clear();
