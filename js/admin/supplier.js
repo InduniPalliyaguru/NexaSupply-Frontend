@@ -1,4 +1,7 @@
 let supplierModalBS, restockModalBS, viewRestockModalBS;
+let allSuppliersList = [];
+let allRestockList = [];
+let allProductsList = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     supplierModalBS = new bootstrap.Modal(document.getElementById('supplierModal'));
@@ -7,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadSuppliers();
     loadRestockHistory();
+    loadProducts();
 });
 
 function toggleSidebar() {
@@ -16,17 +20,116 @@ function toggleSidebar() {
     overlay.classList.toggle('show');
 }
 
-
-function loadSuppliers() {
-
+async function loadProducts() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${BASE_URL}/products`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        if (response.ok || data.code === 200 || data.status === 200) {
+            allProductsList = data.body || data.data || [];
+        }
+    } catch (err) {
+        console.error("Error loading products:", err);
+    }
 }
 
-function handleSupplierSearch(query) {
-    if (!query.trim()) {
-        loadSuppliers();
+async function loadSuppliers() {
+    const token = localStorage.getItem('token');
+    try {
+
+        const response = await fetch(`${BASE_URL}/suppliers`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        if (response.ok || data.code === 200 || data.status === 200) {
+            allSuppliersList = data.body || data.data || [];
+            renderSupplierTable(allSuppliersList);
+            populateSupplierDropdown(allSuppliersList);
+        }
+    } catch (err) {
+        console.error("Error loading suppliers:", err);
+    }
+}
+
+function renderSupplierTable(suppliers) {
+    const tbody = document.getElementById('suppliersTableBody');
+    tbody.innerHTML = '';
+
+    if (!suppliers || suppliers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No suppliers found</td></tr>`;
         return;
     }
 
+    suppliers.forEach(s => {
+        tbody.innerHTML += `
+            <tr>
+                <td class="fw-bold" style="color: var(--nexa-primary);">${s.supplierCode}</td>
+                <td class="fw-bold text-dark">${s.companyName}</td>
+                <td>${s.contactPerson || '-'}</td>
+                <td>${s.phone || '-'}</td>
+                <td>${s.email || '-'}</td>
+                <td>${s.address || '-'}</td>
+                <td class="text-end">
+                    <button class="btn btn-light btn-sm rounded-circle me-1"
+                        onclick="openEditSupplierModal('${s.supplierCode}', '${escapeQuotes(s.companyName)}', '${escapeQuotes(s.contactPerson)}', '${s.phone || ''}', '${s.email || ''}', '${escapeQuotes(s.address)}')">
+                        <i class="fa-solid fa-pen-to-square text-primary"></i>
+                    </button>
+                    <button class="btn btn-light btn-sm rounded-circle" onclick="deleteSupplier('${s.supplierCode}')">
+                        <i class="fa-solid fa-trash text-danger"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function populateSupplierDropdown(suppliers) {
+    const select = document.getElementById('restockSupplierCode');
+    if (!select) return;
+
+    select.innerHTML = `<option value="" disabled selected>Select Supplier</option>`;
+    suppliers.forEach(s => {
+        select.innerHTML += `<option value="${s.supplierCode}">${s.companyName} (${s.supplierCode})</option>`;
+    });
+}
+
+function escapeQuotes(str) {
+    if (!str) return '';
+    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+async function handleSupplierSearch(query) {
+    const trimmed = query.trim();
+    if (!trimmed) {
+        renderSupplierTable(allSuppliersList);
+        return;
+    }
+    const token = localStorage.getItem('token');
+    try {
+
+        const response = await fetch(`${BASE_URL}/suppliers/search?query=${encodeURIComponent(trimmed)}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+
+        if (response.ok || data.code === 200) {
+            renderSupplierTable(data.body || data.data || []);
+        }
+
+    } catch (err) {
+        console.error("Error searching suppliers:", err);
+    }
 }
 
 function openAddSupplierModal() {
@@ -47,52 +150,175 @@ function openEditSupplierModal(code, company, contact, phone, email, address) {
     supplierModalBS.show();
 }
 
-function handleSupplierSubmit(e) {
+async function handleSupplierSubmit(e) {
     e.preventDefault();
+    const token = localStorage.getItem('token');
     const code = document.getElementById('supplierCodeHidden').value;
 
     const dto = {
+        supplierCode: code || null,
         companyName: document.getElementById('supplierCompanyName').value,
         contactPerson: document.getElementById('supplierContactPerson').value,
         phone: document.getElementById('supplierPhone').value,
         email: document.getElementById('supplierEmail').value,
         address: document.getElementById('supplierAddress').value
     };
+    const isEdit = !!code;
+    const method = isEdit ? 'PUT' : 'POST';
 
-    if (code) {
-        dto.supplierCode = code;
-        alert("Supplier updated successfully!");
-    } else {
-        alert("Supplier added successfully!");
+    try {
+
+        const response = await fetch(`${BASE_URL}/suppliers`, {
+            method: method,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dto)
+        });
+
+        const data = await response.json();
+
+        if (response.ok || data.code === 200 || data.code === 201) {
+            alert(isEdit ? "Supplier updated successfully!" : "Supplier created successfully!");
+            supplierModalBS.hide();
+            await loadSuppliers();
+        } else {
+            alert(data.message || "Failed to save supplier!");
+        }
+
+    } catch (err) {
+        console.error("Error saving supplier:", err);
     }
-    supplierModalBS.hide();
+
 }
 
-function deleteSupplier(supplierCode) {
-    if (confirm(`Are you sure you want to delete supplier ${supplierCode}?`)) {
-        alert(`Supplier ${supplierCode} deleted successfully!`);
+async function deleteSupplier(supplierCode) {
+    if (!confirm(`Are you sure you want to delete supplier ${supplierCode}?`)) return;
+
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${BASE_URL}/suppliers/${supplierCode}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok || data.code === 200) {
+            alert(data.message || "Supplier deleted successfully!");
+            await loadSuppliers();
+        } else {
+            alert(data.message || "Failed to delete supplier!");
+        }
+    } catch (err) {
+        console.error("Error deleting supplier:", err);
     }
 }
 
 
-// GET /api/v1/restocks (Fetch All History)
-function loadRestockHistory() {
+async function loadRestockHistory() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${BASE_URL}/restocks`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
 
+        const data = await response.json();
+
+        if (response.ok || data.code === 200 || data.status === 200) {
+            allRestockList = data.body || data.data || [];
+            renderRestockTable(allRestockList);
+        }
+    } catch (err) {
+        console.error("Error loading restock history:", err);
+    }
 }
 
-// GET /api/v1/restocks/{restockCode} (Search by Restock Code)
-function handleRestockSearch(restockCode) {
-    const query = restockCode.trim();
-    if (!query) {
-        loadRestockHistory();
+function renderRestockTable(restockList) {
+    const tbody = document.getElementById('restockTableBody');
+    tbody.innerHTML = '';
+
+    if (!restockList || restockList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No restock history entries found</td></tr>`;
         return;
     }
 
+    restockList.forEach(r => {
+        let formattedDate = r.restockDate ? new Date(r.restockDate).toLocaleString() : '-';
+        let costFormatted = r.totalCost ? r.totalCost.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }) : '0.00';
+
+        tbody.innerHTML += `
+            <tr>
+                <td class="fw-bold" style="color: var(--nexa-primary);">${r.restockCode}</td>
+                <td class="fw-bold text-dark">${r.supplierName || '-'}</td>
+                <td>${r.invoiceNumber || '-'}</td>
+                <td class="text-muted small">${formattedDate}</td>
+                <td class="fw-bold text-success">LKR ${costFormatted}</td>
+                <td class="text-end">
+                    <button class="btn btn-light btn-sm rounded-circle" title="View Details"
+                            onclick="viewRestockDetails('${r.restockCode}')">
+                        <i class="fa-solid fa-eye text-secondary"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
 }
 
-function openAddRestockModal() {
+async function handleRestockSearch(query) {
+    const trimmed = query.trim();
+
+    if (!trimmed) {
+        renderRestockTable(allRestockList);
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${BASE_URL}/restocks/${encodeURIComponent(trimmed)}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok || data.code === 200) {
+            const result = data.body || data.data;
+            renderRestockTable(result ? [result] : []);
+        } else {
+            const filtered = allRestockList.filter(r =>
+                (r.restockCode && r.restockCode.toLowerCase().includes(trimmed.toLowerCase())) ||
+                (r.invoiceNumber && r.invoiceNumber.toLowerCase().includes(trimmed.toLowerCase()))
+            );
+            renderRestockTable(filtered);
+        }
+    } catch (err) {
+        console.error("Error searching restock code:", err);
+    }
+}
+
+async function openAddRestockModal() {
     document.getElementById('restockForm').reset();
     document.getElementById('restockItemsContainer').innerHTML = "";
+
+    await loadSuppliers();
+
+    if (allProductsList.length === 0) {
+        await loadProducts();
+    }
+
     addRestockRow();
     calculateGrandTotal();
     restockModalBS.show();
@@ -102,24 +328,35 @@ function addRestockRow() {
     const container = document.getElementById('restockItemsContainer');
     const rowId = Date.now();
 
+    let productOptions = `<option value="" disabled selected>Select Product</option>`;
+    if (allProductsList && allProductsList.length > 0) {
+        allProductsList.forEach(p => {
+            const pCode = p.productCode || p.code;
+            const pName = p.productName || p.name || '';
+            productOptions += `<option value="${pCode}">${pCode} - ${pName}</option>`;
+        });
+    }
+
     const tr = document.createElement('tr');
     tr.id = `row-${rowId}`;
     tr.innerHTML = `
-            <td>
-                <input type="text" class="form-control rounded-pill item-code" placeholder="e.g. PRD-1001" required>
-            </td>
-            <td>
-                <input type="number" class="form-control rounded-pill item-qty" value="1" min="1" oninput="calculateGrandTotal()" required>
-            </td>
-            <td>
-                <input type="number" class="form-control rounded-pill item-price" value="0.00" min="0" step="0.01" oninput="calculateGrandTotal()" required>
-            </td>
-            <td class="text-center">
-                <button type="button" class="btn btn-light btn-sm rounded-circle" onclick="removeRestockRow('row-${rowId}')">
-                    <i class="fa-solid fa-trash text-danger"></i>
-                </button>
-            </td>
-        `;
+        <td>
+            <select class="form-select rounded-pill item-code" required>
+                ${productOptions}
+            </select>
+        </td>
+        <td>
+            <input type="number" class="form-control rounded-pill item-qty" value="1" min="1" oninput="calculateGrandTotal()" required>
+        </td>
+        <td>
+            <input type="number" class="form-control rounded-pill item-price" value="0.00" min="0" step="0.01" oninput="calculateGrandTotal()" required>
+        </td>
+        <td class="text-center">
+            <button type="button" class="btn btn-light btn-sm rounded-circle" onclick="removeRestockRow('row-${rowId}')">
+                <i class="fa-solid fa-trash text-danger"></i>
+            </button>
+        </td>
+    `;
     container.appendChild(tr);
     calculateGrandTotal();
 }
@@ -142,12 +379,15 @@ function calculateGrandTotal() {
         grandTotal += (qty * price);
     });
 
-    document.getElementById('restockGrandTotalDisplay').innerText = `LKR ${grandTotal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+    document.getElementById('restockGrandTotalDisplay').innerText = `LKR ${grandTotal.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })}`;
 }
 
-// POST /api/v1/restocks
-function handleRestockSubmit(e) {
+async function handleRestockSubmit(e) {
     e.preventDefault();
+    const token = localStorage.getItem('token');
 
     const supplierCode = document.getElementById('restockSupplierCode').value;
     const invoiceNumber = document.getElementById('restockInvoiceNumber').value;
@@ -156,7 +396,7 @@ function handleRestockSubmit(e) {
     const items = [];
 
     rows.forEach(row => {
-        const productCode = row.querySelector('.item-code').value;
+        const productCode = row.querySelector('.item-code').value.trim();
         const qtyAdded = parseInt(row.querySelector('.item-qty').value) || 0;
         const purchaseUnitPrice = parseFloat(row.querySelector('.item-price').value) || 0;
 
@@ -180,36 +420,87 @@ function handleRestockSubmit(e) {
         items: items
     };
 
-    alert("Restock entry created successfully!");
-    restockModalBS.hide();
+    try {
+        const response = await fetch(`${BASE_URL}/restocks`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(restockRequestDTO)
+        });
+
+        const data = await response.json();
+
+        if (response.ok || data.code === 201 || data.code === 200) {
+            alert(data.message || "Restock entry created successfully!");
+            restockModalBS.hide();
+            await loadRestockHistory();
+        } else {
+            alert(data.message || "Failed to create restock entry!");
+        }
+    } catch (err) {
+        console.error("Error creating restock entry:", err);
+    }
 }
 
-// GET /api/v1/restocks/{restockCode} (View Detail Modal)
-function viewRestockDetails(restockCode) {
+async function viewRestockDetails(restockCode) {
+    const token = localStorage.getItem('token');
 
-    document.getElementById('viewRestockCode').innerText = restockCode;
-    document.getElementById('viewSupplierName').innerText = "Ceylon Beverages PLC";
-    document.getElementById('viewInvoiceNo').innerText = "INV-88902";
-    document.getElementById('viewRestockDate').innerText = "16 Aug 2026, 02:15 PM";
+    try {
+        const response = await fetch(`${BASE_URL}/restocks/${restockCode}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
 
-    const tbody = document.getElementById('viewRestockItemsTable');
-    tbody.innerHTML = `
-            <tr>
-                <td class="fw-bold">PRD-1001</td>
-                <td>Coca Cola 1.5L</td>
-                <td>2000</td>
-                <td>LKR 250.00</td>
-                <td class="text-end fw-bold">LKR 500,000.00</td>
-            </tr>
-            <tr>
-                <td class="fw-bold">PRD-1002</td>
-                <td>Sprite 1.5L</td>
-                <td>3000</td>
-                <td>LKR 250.00</td>
-                <td class="text-end fw-bold">LKR 750,000.00</td>
-            </tr>
-        `;
-    document.getElementById('viewRestockGrandTotal').innerText = "LKR 1,250,000.00";
+        const data = await response.json();
 
-    viewRestockModalBS.show();
+        if (response.ok || data.code === 200) {
+            const restock = data.body || data.data;
+
+            document.getElementById('viewRestockCode').innerText = restock.restockCode || '-';
+            document.getElementById('viewSupplierName').innerText = restock.supplierName || '-';
+            document.getElementById('viewInvoiceNo').innerText = restock.invoiceNumber || '-';
+            document.getElementById('viewRestockDate').innerText = restock.restockDate ? new Date(restock.restockDate).toLocaleString() : '-';
+
+            const tbody = document.getElementById('viewRestockItemsTable');
+            tbody.innerHTML = '';
+
+            const detailsList = restock.details || [];
+            let grandTotal = 0;
+
+            if (detailsList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No items found</td></tr>`;
+            } else {
+                detailsList.forEach(item => {
+                    const subTotal = item.subTotal || (item.qtyAdded * item.purchaseUnitPrice);
+                    grandTotal += subTotal;
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="fw-bold">${item.productCode}</td>
+                            <td>${item.productName || '-'}</td>
+                            <td>${item.qtyAdded}</td>
+                            <td>LKR ${item.purchaseUnitPrice.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                            <td class="text-end fw-bold">LKR ${subTotal.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const totalToShow = restock.totalCost ? restock.totalCost : grandTotal;
+            document.getElementById('viewRestockGrandTotal').innerText = `LKR ${totalToShow.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })}`;
+
+            viewRestockModalBS.show();
+        } else {
+            alert(data.message || "Failed to fetch restock details!");
+        }
+    } catch (err) {
+        console.error("Error fetching restock details:", err);
+    }
 }
