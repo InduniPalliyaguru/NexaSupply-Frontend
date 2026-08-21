@@ -3,6 +3,8 @@ let salesChartInstance = null;
 document.addEventListener('DOMContentLoaded', () => {
     loadAdminDashboardData();
     fetchUserProfileName();
+    loadNotificationCount();
+    loadNotifications();
 });
 
 function toggleSidebar() {
@@ -145,5 +147,150 @@ async function fetchUserProfileName() {
         }
     } catch (err) {
         console.error("Error fetching user profile name:", err);
+    }
+}
+
+async function loadNotificationCount() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/notifications/unread-count`, {
+            method: 'GET',
+            headers: {'Authorization': `Bearer ${token}`}
+        });
+        const data = await response.json();
+        if (response.ok || data.code === 200) {
+            const count = data.body !== undefined ? data.body : (data.data || 0);
+            const badge = document.getElementById('unreadBadge');
+            if (badge) {
+                badge.innerText = count;
+                badge.style.display = count > 0 ? 'inline-block' : 'none';
+            }
+        }
+    } catch (err) {
+        console.error("Cannot load notification count", err);
+    }
+}
+
+async function loadNotifications() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/notifications`, {
+            method: 'GET',
+            headers: {'Authorization': `Bearer ${token}`}
+        });
+        const data = await response.json();
+        if (response.ok || data.code === 200) {
+            const notifications = data.body || data.data || [];
+            renderNotificationList(notifications);
+        }
+    } catch (err) {
+        console.error("Cannot load notifications", err);
+    }
+}
+
+function renderNotificationList(notifications) {
+    const listContainer = document.getElementById('notificationList');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = '';
+
+    if (!notifications || notifications.length === 0) {
+        listContainer.innerHTML = `<div class="text-center py-3 text-muted small">No notifications available</div>`;
+        return;
+    }
+
+    notifications.forEach(n => {
+        let timeAgo = n.createdAt ? new Date(n.createdAt).toLocaleString() : '';
+
+        const isRead = n.isRead === true || n.read === true || n.isRead === "true" || n.read === "true";
+
+        const bgColor = isRead ? '#ffffff' : '#eef2ff';
+        const borderStyle = isRead ? 'border border-light-subtle' : 'border-start border-4 border-primary shadow-sm';
+        const titleColor = isRead ? 'text-secondary fw-semibold' : 'text-primary fw-bold';
+
+        const statusBadge = isRead
+            ? `<span class="badge bg-secondary-subtle text-secondary border" style="font-size: 0.65rem;">READ</span>`
+            : `<span class="badge bg-primary" style="font-size: 0.65rem;">NEW</span>`;
+
+        listContainer.innerHTML += `
+            <div class="notification-item p-2 rounded-3 mb-2 ${borderStyle} position-relative" 
+                 style="background-color: ${bgColor} !important; transition: all 0.2s ease;">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="small ${titleColor}" onclick="markNotificationAsRead(${n.notificationId})" style="cursor: pointer;">
+                        ${n.title || 'Notification'}
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        ${statusBadge}
+                        <button class="btn btn-link btn-sm text-danger p-0 ms-1" onclick="deleteNotification(${n.notificationId})" title="Delete">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-muted small my-1" onclick="markNotificationAsRead(${n.notificationId})" style="font-size: 0.78rem; cursor: pointer;">
+                    ${n.message || ''}
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-1">
+                    <span class="text-muted" style="font-size: 0.7rem;">${timeAgo}</span>
+                </div>
+            </div>
+        `;
+    });
+}
+
+async function markNotificationAsRead(notificationId) {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/notifications/${notificationId}/read`, {
+            method: 'PUT',
+            headers: {'Authorization': `Bearer ${token}`}
+        });
+        if (response.ok) {
+            await loadNotificationCount();
+            await loadNotifications();
+        }
+    } catch (err) {
+        console.error("Cannot mark notification as read", err);
+    }
+}
+
+async function markAllNotificationsAsRead() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/notifications/read-all`, {
+            method: 'PUT',
+            headers: {'Authorization': `Bearer ${token}`}
+        });
+        if (response.ok) {
+            await loadNotificationCount();
+            await loadNotifications();
+        }
+    } catch (err) {
+        console.error("Cannot mark all notifications as read", err);
+    }
+}
+
+async function deleteNotification(notificationId) {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/notifications/${notificationId}`, {
+            method: 'DELETE',
+            headers: {'Authorization': `Bearer ${token}`}
+        });
+        if (response.ok) {
+            await loadNotificationCount();
+            await loadNotifications();
+        }
+    } catch (err) {
+        console.error("Cannot delete notification", err);
     }
 }
