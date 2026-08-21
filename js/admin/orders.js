@@ -4,6 +4,7 @@ let allOrdersList = [];
 document.addEventListener('DOMContentLoaded', () => {
     viewOrderModalBS = new bootstrap.Modal(document.getElementById('viewOrderModal'));
     loadAllOrders();
+    fetchUserProfileName();
 });
 
 function toggleSidebar() {
@@ -268,4 +269,33 @@ function filterOrders() {
     });
 
     renderAllOrders(filtered);
+}
+
+async function fetchUserProfileName() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/users/profile`, {
+            method: 'GET',
+            headers: {'Authorization': `Bearer ${token}`}
+        });
+
+        const data = await response.json();
+        if (response.ok || data.code === 200) {
+            const user = data.body || data.data;
+            if (user && user.fullName) {
+                const nameElem = document.getElementById('profileName');
+                if (nameElem) nameElem.innerText = user.fullName;
+
+                const mailElem = document.getElementById('profileEmail');
+                if (mailElem) mailElem.innerText = user.email || '';
+
+                const avatarElem = document.querySelector('.user-avatar');
+                if (avatarElem) avatarElem.innerText = user.fullName.charAt(0).toUpperCase();
+            }
+        }
+    } catch (err) {
+        console.error("Error fetching user profile name:", err);
+    }
 }
