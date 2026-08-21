@@ -146,35 +146,7 @@
                         </tr>
                         </thead>
                         <tbody id="paymentsTableBody">
-                        <!-- Sample UI Row -->
-                        <tr>
-                            <td class="fw-bold" style="color: var(--nexa-primary);">PAY-2026-001</td>
-                            <td class="fw-bold text-dark">ORD-2026-8801</td>
-                            <td class="fw-semibold">LKR 150,000.00</td>
-                            <td class="text-success fw-semibold">LKR 100,000.00</td>
-                            <td class="text-danger fw-semibold">LKR 50,000.00</td>
-                            <td><span class="badge badge-pay-partial rounded-pill px-3 py-2">PARTIAL</span></td>
-                            <td class="text-end">
-                                <button class="btn text-white btn-sm rounded-pill px-3"
-                                        style="background: var(--nexa-primary);"
-                                        onclick="openProcessPaymentModal('PAY-2026-001', 50000.00)">
-                                    <i class="fa-solid fa-hand-holding-dollar me-1"></i> Process Pay
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="color: var(--nexa-primary);">PAY-2026-002</td>
-                            <td class="fw-bold text-dark">ORD-2026-8802</td>
-                            <td class="fw-semibold">LKR 85,000.00</td>
-                            <td class="text-success fw-semibold">LKR 85,000.00</td>
-                            <td class="text-muted fw-semibold">LKR 0.00</td>
-                            <td><span class="badge badge-pay-paid rounded-pill px-3 py-2">PAID</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-light btn-sm rounded-pill px-3 text-muted" disabled>
-                                    <i class="fa-solid fa-circle-check text-success me-1"></i> Completed
-                                </button>
-                            </td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -221,36 +193,7 @@
                         </tr>
                         </thead>
                         <tbody id="ledgerTableBody">
-                        <!-- Sample UI Rows -->
-                        <tr>
-                            <td class="fw-bold" style="color: var(--nexa-primary);">LDG-00101</td>
-                            <td>
-                                <div><span class="fw-bold text-dark">Sunil Supermarket</span></div>
-                                <small class="text-muted">USR-RET-101</small>
-                            </td>
-                            <td class="fw-semibold">ORD-2026-8801</td>
-                            <td><span class="badge badge-ledger-deduction rounded-pill px-3 py-1">ORDER_DEDUCTION</span>
-                            </td>
-                            <td class="text-danger fw-semibold">LKR 150,000.00</td>
-                            <td class="fw-bold text-dark">LKR 150,000.00</td>
-                            <td class="text-muted small">16 Aug 2026, 10:15 AM</td>
-                            <td class="text-muted small">Credit limit deducted for order</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="color: var(--nexa-primary);">LDG-00102</td>
-                            <td>
-                                <div><span class="fw-bold text-dark">Sunil Supermarket</span></div>
-                                <small class="text-muted">USR-RET-101</small>
-                            </td>
-                            <td class="fw-semibold">PAY-2026-001</td>
-                            <td><span
-                                    class="badge badge-ledger-restoration rounded-pill px-3 py-1">PAYMENT_RESTORATION</span>
-                            </td>
-                            <td class="text-success fw-semibold">LKR 100,000.00</td>
-                            <td class="fw-bold text-dark">LKR 50,000.00</td>
-                            <td class="text-muted small">16 Aug 2026, 02:30 PM</td>
-                            <td class="text-muted small">Credit balance restored after payment</td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -283,30 +226,7 @@
                         </tr>
                         </thead>
                         <tbody id="auditTableBody">
-                        <!-- Sample UI Rows -->
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="fa-solid fa-user-shield text-primary"></i>
-                                    <span class="fw-semibold text-dark">admin@nexasupply.com</span>
-                                </div>
-                            </td>
-                            <td><span class="badge bg-light text-dark border px-3 py-2">PROCESSED_PAYMENT: PAY-2026-001 (Amount: LKR 100,000.00)</span>
-                            </td>
-                            <td class="text-muted small">16 Aug 2026, 02:30:15 PM</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="fa-solid fa-user text-secondary"></i>
-                                    <span class="fw-semibold text-dark">kamal.store@gmail.com</span>
-                                </div>
-                            </td>
-                            <td><span
-                                    class="badge bg-light text-dark border px-3 py-2">CREATED_ORDER: ORD-2026-8801</span>
-                            </td>
-                            <td class="text-muted small">16 Aug 2026, 10:15:02 AM</td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </div>

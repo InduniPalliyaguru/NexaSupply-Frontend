@@ -154,27 +154,7 @@
                         </thead>
                         <tbody id="shipmentsTableBody">
                         <!-- Sample UI Row -->
-                        <tr>
-                            <td class="fw-bold" style="color: var(--nexa-primary);">TRK-2026-9901</td>
-                            <td class="fw-bold text-dark">ORD-2026-8801</td>
-                            <td>
-                                <div><span class="fw-semibold">Kamal Perera</span></div>
-                                <small class="text-muted">DRV-101</small>
-                            </td>
-                            <td class="text-muted small">16 Aug 2026, 08:30 AM</td>
-                            <td><span class="badge badge-ship-intransit rounded-pill px-3 py-2">IN_TRANSIT</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-light btn-sm rounded-circle me-1"
-                                        onclick="openUpdateStatusModal('TRK-2026-9901', 'IN_TRANSIT')"
-                                        title="Update Status">
-                                    <i class="fa-solid fa-arrows-rotate text-primary"></i>
-                                </button>
-                                <button class="btn btn-light btn-sm rounded-circle"
-                                        onclick="deleteShipment('TRK-2026-9901')" title="Delete Shipment">
-                                    <i class="fa-solid fa-trash text-danger"></i>
-                                </button>
-                            </td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -225,50 +205,7 @@
                         </thead>
                         <tbody id="driversTableBody">
                         <!-- Sample UI Rows -->
-                        <tr>
-                            <td class="fw-bold" style="color: var(--nexa-primary);">DRV-101</td>
-                            <td class="fw-bold text-dark">Kamal Perera</td>
-                            <td>0771234567</td>
-                            <td>B1234567</td>
-                            <td><span class="badge badge-driver-ontrip rounded-pill px-3 py-2">ON_TRIP</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-light btn-sm rounded-circle me-1"
-                                        onclick="openEditDriverModal('DRV-101', 'Kamal Perera', '0771234567', 'B1234567')"
-                                        title="Edit Driver">
-                                    <i class="fa-solid fa-pen-to-square text-primary"></i>
-                                </button>
-                                <button class="btn btn-light btn-sm rounded-circle me-1"
-                                        onclick="toggleDriverStatus('DRV-101', 'AVAILABLE')" title="Set Available">
-                                    <i class="fa-solid fa-toggle-on text-success"></i>
-                                </button>
-                                <button class="btn btn-light btn-sm rounded-circle" onclick="deleteDriver('DRV-101')"
-                                        title="Delete Driver">
-                                    <i class="fa-solid fa-trash text-danger"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold" style="color: var(--nexa-primary);">DRV-102</td>
-                            <td class="fw-bold text-dark">Nimal Silva</td>
-                            <td>0719876543</td>
-                            <td>B7654321</td>
-                            <td><span class="badge badge-driver-available rounded-pill px-3 py-2">AVAILABLE</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-light btn-sm rounded-circle me-1"
-                                        onclick="openEditDriverModal('DRV-102', 'Nimal Silva', '0719876543', 'B7654321')"
-                                        title="Edit Driver">
-                                    <i class="fa-solid fa-pen-to-square text-primary"></i>
-                                </button>
-                                <button class="btn btn-light btn-sm rounded-circle me-1"
-                                        onclick="toggleDriverStatus('DRV-102', 'ON_TRIP')" title="Set On Trip">
-                                    <i class="fa-solid fa-toggle-off text-secondary"></i>
-                                </button>
-                                <button class="btn btn-light btn-sm rounded-circle" onclick="deleteDriver('DRV-102')"
-                                        title="Delete Driver">
-                                    <i class="fa-solid fa-trash text-danger"></i>
-                                </button>
-                            </td>
-                        </tr>
+
                         </tbody>
                     </table>
                 </div>
