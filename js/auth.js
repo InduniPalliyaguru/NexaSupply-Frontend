@@ -1,9 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
+    const forgotEmailForm = document.getElementById('forgotEmailForm');
+    const forgotOtpForm = document.getElementById('forgotOtpForm');
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
+    const forgotPasswordLink = document.getElementById('forgotPassword');
 
     if (loginForm) loginForm.addEventListener('submit', handleLogin);
     if (registerForm) registerForm.addEventListener('submit', handleRegister);
+    if (forgotPasswordLink) forgotPasswordLink.addEventListener('click', showForgotPasswordMode);
+    if (forgotEmailForm) forgotEmailForm.addEventListener('submit', handleSendOtp);
+    if (forgotOtpForm) forgotOtpForm.addEventListener('submit', handleVerifyOtp);
+    if (resetPasswordForm) resetPasswordForm.addEventListener('submit', handleResetPassword);
 });
 
 // LOGIN FUNCTION
@@ -75,6 +83,7 @@ async function handleLogin(event) {
         showAuthAlert("Cannot connect to Backend Server!");
     }
 }
+
 // REGISTER FUNCTION
 async function handleRegister(event) {
     event.preventDefault();
@@ -134,6 +143,115 @@ function togglePasswordVisibility(inputId, iconElem) {
     }
 }
 
+function showForgotPasswordMode(e) {
+    if (e) e.preventDefault();
+    hideAuthAlert();
+
+    isSignUp = true;
+
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('signupSection').style.display = 'none';
+    document.getElementById('forgotPasswordSection').style.display = 'block';
+
+    document.getElementById('forgotEmailForm').style.display = 'block';
+    document.getElementById('forgotOtpForm').style.display = 'none';
+    document.getElementById('resetPasswordForm').style.display = 'none';
+
+    document.getElementById('formTitle').innerText = "Reset Password";
+    document.getElementById('togglePrompt').innerHTML = 'Remembered your password? <a href="javascript:void(0)" onclick="toggleAuthMode()" class="toggle-auth-link">Login here</a>';
+}
+
+async function handleSendOtp(e) {
+    e.preventDefault();
+    hideAuthAlert();
+
+    const email = document.getElementById('resetEmail').value.trim();
+
+    try {
+        const response = await fetch(`${BASE_URL}/auth/forgot-password`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email: email})
+        });
+
+        const result = await response.json();
+
+        if (response.ok && (result.code === 200 || result.status === 200)) {
+            document.getElementById('forgotEmailForm').style.display = 'none';
+            document.getElementById('forgotOtpForm').style.display = 'block';
+        } else {
+            showAuthAlert(result.message || "Failed to send OTP code.");
+        }
+    } catch (error) {
+        showAuthAlert("Server connection error!");
+    }
+}
+
+async function handleVerifyOtp(e) {
+    e.preventDefault();
+    hideAuthAlert();
+
+    const email = document.getElementById('resetEmail').value.trim();
+    const otpCode = document.getElementById('resetOtp').value.trim();
+
+    try {
+        const response = await fetch(`${BASE_URL}/auth/verify-otp`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email: email, otpCode: otpCode})
+        });
+
+        const result = await response.json();
+
+        if (response.ok && (result.code === 200 || result.status === 200)) {
+            document.getElementById('forgotOtpForm').style.display = 'none';
+            document.getElementById('resetPasswordForm').style.display = 'block';
+        } else {
+            showAuthAlert(result.message || "Invalid or expired OTP!");
+        }
+    } catch (error) {
+        showAuthAlert("Server connection error!");
+    }
+}
+
+async function handleResetPassword(e) {
+    e.preventDefault();
+    hideAuthAlert();
+
+    const email = document.getElementById('resetEmail').value.trim();
+    const otpCode = document.getElementById('resetOtp').value.trim();
+    const newPassword = document.getElementById('newPassword').value.trim();
+    const confirmNewPassword = document.getElementById('confirmNewPassword').value.trim();
+
+    if (newPassword !== confirmNewPassword) {
+        showAuthAlert("New Passwords do not match!");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${BASE_URL}/auth/reset-password`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email,
+                otpCode: otpCode,
+                newPassword: newPassword
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && (result.code === 200 || result.status === 200)) {
+            alert("Password updated successfully! Please login with your new password.");
+            location.reload();
+        } else {
+            showAuthAlert(result.message || "Failed to update password!");
+        }
+    } catch (error) {
+        showAuthAlert("Server connection error!");
+    }
+}
+
 let isSignUp = false;
 
 function toggleAuthMode() {
@@ -142,8 +260,11 @@ function toggleAuthMode() {
 
     const loginSec = document.getElementById('loginSection');
     const signupSec = document.getElementById('signupSection');
+    const forgotSec = document.getElementById('forgotPasswordSection');
     const formTitle = document.getElementById('formTitle');
     const togglePrompt = document.getElementById('togglePrompt');
+
+    if (forgotSec) forgotSec.style.display = 'none';
 
     if (isSignUp) {
         if (loginSec) loginSec.style.display = 'none';

@@ -169,3 +169,9 @@ body {
     text-align: center;
     margin-top: 2rem;
 }
+
+#forgotPassword:hover {
+    color: var(--nexa-primary) !important;
+    text-decoration: underline !important;
+    transition: color 0.3s ease;
+}

@@ -66,7 +66,7 @@
             <!-- Remember me & Forgot Password -->
             <div class="d-flex justify-content-between align-items-center mb-4 px-2 small text-muted">
 
-                <a href="#" class="text-muted text-decoration-none">Forgot password?</a>
+                <a href="#" class="text-muted text-decoration-none" id="forgotPassword">Forgot password?</a>
             </div>
 
             <!-- Submit Button -->
@@ -120,7 +120,8 @@
 
             <div class="pill-input-group mb-4">
                 <i class="fa-solid fa-shield-halved input-icon"></i>
-                <input type="password" class="pill-control" id="regConfirmPassword" placeholder="Confirm Password" required>
+                <input type="password" class="pill-control" id="regConfirmPassword" placeholder="Confirm Password"
+                       required>
                 <i class="fa-solid fa-eye-slash password-toggle"
                    onclick="togglePasswordVisibility('regConfirmPassword', this)"></i>
             </div>
@@ -130,6 +131,59 @@
                 <i class="fa-solid fa-user-plus me-2"></i> Create Account
             </button>
         </form>
+    </div>
+
+    <!-- ================= 3. FORGOT PASSWORD SECTION ================= -->
+    <div id="forgotPasswordSection" style="display: none;">
+
+        <!-- STEP 1: Email Input Form -->
+        <form id="forgotEmailForm">
+            <p class="text-muted small text-center mb-3">Enter your registered email address to receive a 6-digit OTP
+                code.</p>
+            <div class="pill-input-group mb-4">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input type="email" class="pill-control" id="resetEmail" placeholder="yourmail@company.com" required>
+            </div>
+            <button type="submit" class="btn btn-pill-primary w-100">
+                <i class="fa-solid fa-paper-plane me-2"></i> Send OTP
+            </button>
+        </form>
+
+        <!-- STEP 2: OTP Verification Form -->
+        <form id="forgotOtpForm" style="display: none;">
+            <p class="text-muted small text-center mb-3">An OTP code has been sent to your email. Enter the 6-digit code
+                below.</p>
+            <div class="pill-input-group mb-4">
+                <i class="fa-solid fa-key input-icon"></i>
+                <input type="text" class="pill-control text-center" id="resetOtp" placeholder="6-Digit OTP"
+                       maxlength="6" required>
+            </div>
+            <button type="submit" class="btn btn-pill-primary w-100">
+                <i class="fa-solid fa-check-circle me-2"></i> Verify OTP
+            </button>
+        </form>
+
+        <!-- STEP 3: Reset Password Form -->
+        <form id="resetPasswordForm" style="display: none;">
+            <p class="text-muted small text-center mb-3">Enter your new password below.</p>
+            <div class="pill-input-group mb-3">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" class="pill-control" id="newPassword" placeholder="New Password" required>
+                <i class="fa-solid fa-eye-slash password-toggle"
+                   onclick="togglePasswordVisibility('newPassword', this)"></i>
+            </div>
+            <div class="pill-input-group mb-4">
+                <i class="fa-solid fa-shield-halved input-icon"></i>
+                <input type="password" class="pill-control" id="confirmNewPassword" placeholder="Confirm New Password"
+                       required>
+                <i class="fa-solid fa-eye-slash password-toggle"
+                   onclick="togglePasswordVisibility('confirmNewPassword', this)"></i>
+            </div>
+            <button type="submit" class="btn btn-pill-primary w-100">
+                <i class="fa-solid fa-rotate me-2"></i> Update Password
+            </button>
+        </form>
+
     </div>
 
     <!-- FOOTER COPYRIGHT -->
