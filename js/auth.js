@@ -33,7 +33,7 @@ async function handleLogin(event) {
         const result = await response.json();
         console.log("Backend Response Details:", result);
 
-        const isSuccess = response.ok && (result.code == 200 || result.status == 200);
+        const isSuccess = response.ok && (result.code === 200 || result.status === 200);
 
         if (isSuccess) {
             console.log("SUCCESS CONDITION MET! Saving data...");
@@ -78,6 +78,14 @@ async function handleLogin(event) {
 // REGISTER FUNCTION
 async function handleRegister(event) {
     event.preventDefault();
+
+    const password = document.getElementById('regPassword').value.trim();
+    const confirmPassword = document.getElementById('regConfirmPassword').value.trim();
+
+    if (password !== confirmPassword) {
+        showAuthAlert("Passwords do not match! Please check again.");
+        return;
+    }
 
     const registerPayload = {
         fullName: document.getElementById('regFullName').value.trim(),

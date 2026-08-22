@@ -31,7 +31,10 @@ async function loadPayments() {
         const data = await response.json();
 
         if (response.ok || data.code === 200) {
-            allPaymentsList = data.body || data.data || [];
+            const rawData = data.body || data.data || [];
+
+            allPaymentsList = [...rawData].reverse();
+
             renderPaymentsTable(allPaymentsList);
         } else {
             console.error("Failed to load payments:", data.message);
