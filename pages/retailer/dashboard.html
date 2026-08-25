@@ -238,5 +238,27 @@
 
 <script src="../../js/config.js"></script>
 <script src="../../js/retailer/dashboard.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const chatCss = document.createElement("link");
+        chatCss.rel = "stylesheet";
+        chatCss.href = "../../css/chat.css";
+        document.head.appendChild(chatCss);
+
+        fetch('../common/chat-widget.html')
+            .then(res => res.text())
+            .then(html => {
+                document.body.insertAdjacentHTML('beforeend', html);
+
+                const chatJs = document.createElement("script");
+                chatJs.src = "../../js/chat.js";
+                document.body.appendChild(chatJs);
+            })
+            .catch(err => console.error("Error loading chat widget:", err));
+    });
+</script>
+
 </body>
 </html>

@@ -1,0 +1,44 @@
+<!-- Floating Trigger Button -->
+<div class="nexa-chat-float-btn" id="nexaChatFloatBtn" onclick="toggleNexaChat()">
+    <i class="fa-solid fa-robot"></i>
+</div>
+
+<!-- Floating Chat Popup Window -->
+<div class="nexa-chat-popup" id="nexaChatPopup">
+    <!-- Header -->
+    <div class="nexa-chat-header">
+        <div class="nexa-chat-brand">
+            <div class="nexa-chat-avatar">
+                <i class="fa-solid fa-comments"></i>
+            </div>
+            <div>
+                <h4 class="nexa-chat-title">NexaSupply AI</h4>
+                <span class="nexa-chat-status"><span class="status-dot"></span> Online</span>
+            </div>
+        </div>
+        <button class="nexa-chat-close-btn" onclick="toggleNexaChat()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <!-- Message Display Area -->
+    <div class="nexa-chat-body" id="nexaChatBody">
+        <div class="nexa-msg nexa-bot-msg">
+            Hello! I am your NexaSupply Assistant. How can I help you today?
+        </div>
+        <div class="nexa-typing" id="nexaTypingIndicator">
+            <i class="fa-solid fa-circle-notch fa-spin"></i> AI is thinking...
+        </div>
+    </div>
+
+    <!-- Input Box -->
+    <div class="nexa-chat-footer">
+        <div class="nexa-input-group">
+            <input type="text" id="nexaChatInput" class="nexa-chat-input" placeholder="Ask about orders, revenue..."
+                   onkeypress="handleNexaChatKeyPress(event)">
+            <button class="nexa-send-btn" onclick="sendNexaChatMessage()">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>

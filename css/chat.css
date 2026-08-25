@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700;800&display=swap');
+
+/* --- FLOATING BUTTON --- */
+.nexa-chat-float-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--nexa-dark, #3b0a45), var(--nexa-primary, #6f2c91));
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(59, 10, 69, 0.3);
+    z-index: 99999;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.nexa-chat-float-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    background: linear-gradient(135deg, var(--nexa-primary, #6f2c91), var(--nexa-accent, #8b5cf6));
+    box-shadow: 0 14px 30px rgba(111, 44, 145, 0.4);
+}
+
+/* --- CHAT POPUP WINDOW --- */
+.nexa-chat-popup {
+    position: fixed;
+    bottom: 95px;
+    right: 25px;
+    width: 380px;
+    height: 520px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 28px;
+    box-shadow: 0 25px 60px rgba(59, 10, 69, 0.22);
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 99999;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.nexa-chat-popup.active {
+    display: flex;
+    animation: popupSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes popupSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* --- HEADER --- */
+.nexa-chat-header {
+    background: linear-gradient(135deg, var(--nexa-dark, #3b0a45) 0%, var(--nexa-primary, #6f2c91) 100%);
+    color: #ffffff;
+    padding: 1.1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nexa-chat-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nexa-chat-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.nexa-chat-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    margin: 0;
+    color: #ffffff;
+}
+
+.nexa-chat-status {
+    font-size: 0.72rem;
+    color: #e9d5ff;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    background-color: #10b981;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.nexa-chat-close-btn {
+    background: none;
+    border: none;
+    color: #cbd5e1;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.nexa-chat-close-btn:hover {
+    color: #ffffff;
+}
+
+/* --- BODY & MESSAGES --- */
+.nexa-chat-body {
+    flex: 1;
+    padding: 1.2rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f8fafc;
+}
+
+.nexa-msg {
+    max-width: 82%;
+    padding: 11px 16px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.nexa-bot-msg {
+    align-self: flex-start;
+    background: #ffffff;
+    color: var(--nexa-text-dark, #1e1b24);
+    border-radius: 20px 20px 20px 4px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.nexa-user-msg {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--nexa-primary, #6f2c91), var(--nexa-accent, #8b5cf6));
+    color: #ffffff;
+    border-radius: 20px 20px 4px 20px;
+    box-shadow: 0 6px 16px rgba(111, 44, 145, 0.25);
+}
+
+/* Typing Indicator */
+.nexa-typing {
+    align-self: flex-start;
+    font-size: 0.78rem;
+    color: var(--nexa-text-muted, #6b7280);
+    font-style: italic;
+    display: none;
+    padding: 4px 8px;
+}
+
+/* --- FOOTER & INPUT --- */
+.nexa-chat-footer {
+    padding: 1rem;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+}
+
+.nexa-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.nexa-chat-input {
+    width: 100%;
+    padding: 12px 48px 12px 18px;
+    border-radius: 50px !important;
+    border: 1.5px solid #e2e8f0;
+    background: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--nexa-text-dark, #1e1b24);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.nexa-chat-input:focus {
+    border-color: var(--nexa-primary, #6f2c91);
+    box-shadow: 0 6px 20px rgba(111, 44, 145, 0.15);
+}
+
+.nexa-send-btn {
+    position: absolute;
+    right: 6px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50px;
+    border: none;
+    background: linear-gradient(135deg, var(--nexa-dark, #3b0a45), var(--nexa-primary, #6f2c91));
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nexa-send-btn:hover {
+    background: linear-gradient(135deg, var(--nexa-primary, #6f2c91), var(--nexa-accent, #8b5cf6));
+    transform: scale(1.05);
+}
