@@ -12,185 +12,198 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="nexa-split-auth">
 
-<!-- Clear Overlay over Background Image -->
-<div class="bg-overlay"></div>
+<!-- Background Image & Dark Overlay -->
+<div class="hero-bg-overlay"></div>
 
-<div class="main-content-container">
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-4 position-relative z-2">
+    <div class="row w-100 align-items-center justify-content-between max-width-wrapper">
 
-    <!-- TOP BRANDING & LOGO -->
-    <div class="text-center mb-4">
-        <div class="d-flex align-items-center justify-content-center mb-2">
-            <!-- Large Logo Image (Height: 130px) -->
-            <img src="images/logo.png" alt="NexaSupply Logo" class="big-logo-img"
-                 onerror="this.style.display='none'; document.getElementById('alt-icon').style.display='inline-block';">
-            <i id="alt-icon" class="fa-solid fa-boxes-packing fa-4x"
-               style="color: var(--nexa-primary); display: none;"></i>
+        <!-- ================= LEFT SIDE: Wholesale Branding Content ================= -->
+        <div class="col-lg-6 text-white mb-5 mb-lg-0 pe-lg-5 left-hero-text">
+            <!-- Logo with name directly below it -->
+            <div class="brand-badge mb-4 d-inline-flex flex-column align-items-start gap-2">
+                <img src="images/logo.png" alt="NexaSupply Logo" class="brand-mini-logo"
+                     onerror="this.style.display='none'; document.getElementById('alt-icon').style.display='inline-block';">
+                <i id="alt-icon" class="fa-solid fa-boxes-packing fa-3x text-accent" style="display: none;"></i>
+                <span class="brand-text-title">NexaSupply</span>
+            </div>
+
+            <h1 class="hero-main-title text-uppercase fw-extrabold mb-3">
+                STREAMLINE YOUR <br><span class="highlight-text">SUPPLY CHAIN</span>
+            </h1>
+
+            <h5 class="hero-sub-headline fw-semibold text-light mb-3">
+                Smart B2B Wholesale & Inventory Distribution Platform.
+            </h5>
+
+            <p class="hero-description text-light-50 fs-6">
+                Optimize stock management, accelerate order processing, and expand your wholesale network seamlessly in one unified platform.
+            </p>
         </div>
 
-        <!-- Stylish Gradient Brand Name -->
-        <h1 class="brand-name mb-0">NexaSupply</h1>
+        <!-- ================= RIGHT SIDE: Glassmorphism Auth Card ================= -->
+        <div class="col-lg-5 col-xl-5 offset-lg-1">
+            <div class="glass-auth-card p-4 p-md-5">
 
-        <h2 id="formTitle" class="form-heading mt-3 mb-2">Login</h2>
+                <div class="text-center mb-4">
+                    <h2 id="formTitle" class="form-heading text-white fw-bold mb-2">Login</h2>
+                    <p id="togglePrompt" class="text-light-50 small mb-0">
+                        Don't have an account?
+                        <a href="javascript:void(0)" onclick="toggleAuthMode()" class="toggle-auth-link fw-semibold">Create an Account</a>
+                    </p>
+                </div>
 
-        <p id="togglePrompt" class="text-muted small mb-4">
-            Don't have an account? <a href="javascript:void(0)" onclick="toggleAuthMode()" class="toggle-auth-link">Create
-            your account</a>, it takes less than a minute.
-        </p>
+                <!-- ALERT BOX FOR MESSAGES -->
+                <div id="authAlert" class="alert alert-danger py-2 small d-none text-center mb-4 rounded-pill" role="alert">
+                    <span id="alertMessage"></span>
+                </div>
+
+                <!-- ================= 1. LOGIN FORM ================= -->
+                <div id="loginSection" class="auth-section">
+                    <form id="loginForm">
+
+                        <!-- Email Input -->
+                        <div class="glass-input-group mb-3">
+                            <i class="fa-solid fa-envelope input-icon"></i>
+                            <input type="email" class="glass-control" id="loginEmail" placeholder="yourmail@company.com" required>
+                        </div>
+
+                        <!-- Password Input with Eye Toggle -->
+                        <div class="glass-input-group mb-2">
+                            <i class="fa-solid fa-lock input-icon"></i>
+                            <input type="password" class="glass-control" id="loginPassword" placeholder="Password" required>
+                            <i class="fa-solid fa-eye-slash password-toggle"
+                               onclick="togglePasswordVisibility('loginPassword', this)"></i>
+                        </div>
+
+                        <!-- Forgot Password -->
+                        <div class="d-flex justify-content-end mb-4 small">
+                            <a href="#" class="text-light-50 text-decoration-none" id="forgotPassword">Forgot password?</a>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-nexa-primary w-100 mb-3">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i> SIGN IN
+                        </button>
+                    </form>
+                </div>
+
+                <!-- ================= 2. SIGNUP FORM ================= -->
+                <div id="signupSection" class="auth-section" style="display: none;">
+                    <form id="registerForm">
+
+                        <!-- Full Name -->
+                        <div class="glass-input-group mb-3">
+                            <i class="fa-solid fa-user input-icon"></i>
+                            <input type="text" class="glass-control" id="regFullName" placeholder="Full Name" required>
+                        </div>
+
+                        <!-- Email Address -->
+                        <div class="glass-input-group mb-3">
+                            <i class="fa-solid fa-envelope input-icon"></i>
+                            <input type="email" class="glass-control" id="regEmail" placeholder="Email Address" required>
+                        </div>
+
+                        <!-- Shop Name -->
+                        <div class="glass-input-group mb-3">
+                            <i class="fa-solid fa-store input-icon"></i>
+                            <input type="text" class="glass-control" id="regShopName" placeholder="Shop / Business Name" required>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="glass-input-group mb-3">
+                            <i class="fa-solid fa-phone input-icon"></i>
+                            <input type="text" class="glass-control" id="regPhone" placeholder="Phone Number" required>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="glass-input-group mb-3">
+                            <i class="fa-solid fa-location-dot input-icon"></i>
+                            <input type="text" class="glass-control" id="regAddress" placeholder="Address / City" required>
+                        </div>
+
+                        <!-- Password with Eye Toggle -->
+                        <div class="glass-input-group mb-3">
+                            <i class="fa-solid fa-lock input-icon"></i>
+                            <input type="password" class="glass-control" id="regPassword" placeholder="Create Password" required>
+                            <i class="fa-solid fa-eye-slash password-toggle"
+                               onclick="togglePasswordVisibility('regPassword', this)"></i>
+                        </div>
+
+                        <div class="glass-input-group mb-4">
+                            <i class="fa-solid fa-shield-halved input-icon"></i>
+                            <input type="password" class="glass-control" id="regConfirmPassword" placeholder="Confirm Password" required>
+                            <i class="fa-solid fa-eye-slash password-toggle"
+                               onclick="togglePasswordVisibility('regConfirmPassword', this)"></i>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-nexa-primary w-100 mb-3">
+                            <i class="fa-solid fa-user-plus me-2"></i> CREATE ACCOUNT
+                        </button>
+                    </form>
+                </div>
+
+                <!-- ================= 3. FORGOT PASSWORD SECTION ================= -->
+                <div id="forgotPasswordSection" class="auth-section" style="display: none;">
+
+                    <!-- STEP 1: Email Input Form -->
+                    <form id="forgotEmailForm">
+                        <p class="text-light-50 small text-center mb-4">Enter your registered email address to receive a 6-digit OTP code.</p>
+                        <div class="glass-input-group mb-4">
+                            <i class="fa-solid fa-envelope input-icon"></i>
+                            <input type="email" class="glass-control" id="resetEmail" placeholder="yourmail@company.com" required>
+                        </div>
+                        <button type="submit" class="btn btn-nexa-primary w-100">
+                            <i class="fa-solid fa-paper-plane me-2"></i> SEND OTP
+                        </button>
+                    </form>
+
+                    <!-- STEP 2: OTP Verification Form -->
+                    <form id="forgotOtpForm" style="display: none;">
+                        <p class="text-light-50 small text-center mb-4">An OTP code has been sent to your email. Enter the 6-digit code below.</p>
+                        <div class="glass-input-group mb-4">
+                            <i class="fa-solid fa-key input-icon"></i>
+                            <input type="text" class="glass-control text-center fs-5 letter-spacing-2" id="resetOtp" placeholder="6-Digit OTP" maxlength="6" required>
+                        </div>
+                        <button type="submit" class="btn btn-nexa-primary w-100">
+                            <i class="fa-solid fa-check-circle me-2"></i> VERIFY OTP
+                        </button>
+                    </form>
+
+                    <!-- STEP 3: Reset Password Form -->
+                    <form id="resetPasswordForm" style="display: none;">
+                        <p class="text-light-50 small text-center mb-4">Enter your new password below.</p>
+                        <div class="glass-input-group mb-3">
+                            <i class="fa-solid fa-lock input-icon"></i>
+                            <input type="password" class="glass-control" id="newPassword" placeholder="New Password" required>
+                            <i class="fa-solid fa-eye-slash password-toggle"
+                               onclick="togglePasswordVisibility('newPassword', this)"></i>
+                        </div>
+                        <div class="glass-input-group mb-4">
+                            <i class="fa-solid fa-shield-halved input-icon"></i>
+                            <input type="password" class="glass-control" id="confirmNewPassword" placeholder="Confirm New Password" required>
+                            <i class="fa-solid fa-eye-slash password-toggle"
+                               onclick="togglePasswordVisibility('confirmNewPassword', this)"></i>
+                        </div>
+                        <button type="submit" class="btn btn-nexa-primary w-100">
+                            <i class="fa-solid fa-rotate me-2"></i> UPDATE PASSWORD
+                        </button>
+                    </form>
+
+                </div>
+
+                <!-- FOOTER COPYRIGHT -->
+                <div class="copyright-text mt-4 text-center text-light-50">
+                    &copy; 2026 NexaSupply Systems Ltd.
+                </div>
+
+            </div>
+        </div>
+
     </div>
-
-    <!-- ALERT BOX FOR MESSAGES -->
-    <div id="authAlert" class="alert alert-danger py-2 small d-none text-center mb-3" role="alert">
-        <span id="alertMessage"></span>
-    </div>
-
-    <!-- ================= 1. LOGIN FORM ================= -->
-    <div id="loginSection">
-        <form id="loginForm">
-
-            <!-- Email Input -->
-            <div class="pill-input-group">
-                <i class="fa-solid fa-envelope input-icon"></i>
-                <input type="email" class="pill-control" id="loginEmail" placeholder="yourmail@company.com" required>
-            </div>
-
-            <!-- Password Input with Eye Toggle -->
-            <div class="pill-input-group">
-                <i class="fa-solid fa-lock input-icon"></i>
-                <input type="password" class="pill-control" id="loginPassword" placeholder="Password" required>
-                <i class="fa-solid fa-eye-slash password-toggle"
-                   onclick="togglePasswordVisibility('loginPassword', this)"></i>
-            </div>
-
-            <!-- Remember me & Forgot Password -->
-            <div class="d-flex justify-content-between align-items-center mb-4 px-2 small text-muted">
-
-                <a href="#" class="text-muted text-decoration-none" id="forgotPassword">Forgot password?</a>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-pill-primary">
-                <i class="fa-solid fa-right-to-bracket me-2"></i> Login
-            </button>
-        </form>
-    </div>
-
-    <!-- ================= 2. SIGNUP FORM ================= -->
-    <div id="signupSection" style="display: none;">
-        <form id="registerForm">
-
-            <!-- Full Name -->
-            <div class="pill-input-group">
-                <i class="fa-solid fa-user input-icon"></i>
-                <input type="text" class="pill-control" id="regFullName" placeholder="Full Name" required>
-            </div>
-
-            <!-- Email Address -->
-            <div class="pill-input-group">
-                <i class="fa-solid fa-envelope input-icon"></i>
-                <input type="email" class="pill-control" id="regEmail" placeholder="Email Address" required>
-            </div>
-
-            <!-- Shop Name -->
-            <div class="pill-input-group">
-                <i class="fa-solid fa-store input-icon"></i>
-                <input type="text" class="pill-control" id="regShopName" placeholder="Shop / Business Name" required>
-            </div>
-
-            <!-- Phone Number -->
-            <div class="pill-input-group">
-                <i class="fa-solid fa-phone input-icon"></i>
-                <input type="text" class="pill-control" id="regPhone" placeholder="Phone Number" required>
-            </div>
-
-            <!-- Address -->
-            <div class="pill-input-group">
-                <i class="fa-solid fa-location-dot input-icon"></i>
-                <input type="text" class="pill-control" id="regAddress" placeholder="Address / City" required>
-            </div>
-
-            <!-- Password with Eye Toggle -->
-            <div class="pill-input-group mb-4">
-                <i class="fa-solid fa-lock input-icon"></i>
-                <input type="password" class="pill-control" id="regPassword" placeholder="Create Password" required>
-                <i class="fa-solid fa-eye-slash password-toggle"
-                   onclick="togglePasswordVisibility('regPassword', this)"></i>
-            </div>
-
-            <div class="pill-input-group mb-4">
-                <i class="fa-solid fa-shield-halved input-icon"></i>
-                <input type="password" class="pill-control" id="regConfirmPassword" placeholder="Confirm Password"
-                       required>
-                <i class="fa-solid fa-eye-slash password-toggle"
-                   onclick="togglePasswordVisibility('regConfirmPassword', this)"></i>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-pill-primary">
-                <i class="fa-solid fa-user-plus me-2"></i> Create Account
-            </button>
-        </form>
-    </div>
-
-    <!-- ================= 3. FORGOT PASSWORD SECTION ================= -->
-    <div id="forgotPasswordSection" style="display: none;">
-
-        <!-- STEP 1: Email Input Form -->
-        <form id="forgotEmailForm">
-            <p class="text-muted small text-center mb-3">Enter your registered email address to receive a 6-digit OTP
-                code.</p>
-            <div class="pill-input-group mb-4">
-                <i class="fa-solid fa-envelope input-icon"></i>
-                <input type="email" class="pill-control" id="resetEmail" placeholder="yourmail@company.com" required>
-            </div>
-            <button type="submit" class="btn btn-pill-primary w-100">
-                <i class="fa-solid fa-paper-plane me-2"></i> Send OTP
-            </button>
-        </form>
-
-        <!-- STEP 2: OTP Verification Form -->
-        <form id="forgotOtpForm" style="display: none;">
-            <p class="text-muted small text-center mb-3">An OTP code has been sent to your email. Enter the 6-digit code
-                below.</p>
-            <div class="pill-input-group mb-4">
-                <i class="fa-solid fa-key input-icon"></i>
-                <input type="text" class="pill-control text-center" id="resetOtp" placeholder="6-Digit OTP"
-                       maxlength="6" required>
-            </div>
-            <button type="submit" class="btn btn-pill-primary w-100">
-                <i class="fa-solid fa-check-circle me-2"></i> Verify OTP
-            </button>
-        </form>
-
-        <!-- STEP 3: Reset Password Form -->
-        <form id="resetPasswordForm" style="display: none;">
-            <p class="text-muted small text-center mb-3">Enter your new password below.</p>
-            <div class="pill-input-group mb-3">
-                <i class="fa-solid fa-lock input-icon"></i>
-                <input type="password" class="pill-control" id="newPassword" placeholder="New Password" required>
-                <i class="fa-solid fa-eye-slash password-toggle"
-                   onclick="togglePasswordVisibility('newPassword', this)"></i>
-            </div>
-            <div class="pill-input-group mb-4">
-                <i class="fa-solid fa-shield-halved input-icon"></i>
-                <input type="password" class="pill-control" id="confirmNewPassword" placeholder="Confirm New Password"
-                       required>
-                <i class="fa-solid fa-eye-slash password-toggle"
-                   onclick="togglePasswordVisibility('confirmNewPassword', this)"></i>
-            </div>
-            <button type="submit" class="btn btn-pill-primary w-100">
-                <i class="fa-solid fa-rotate me-2"></i> Update Password
-            </button>
-        </form>
-
-    </div>
-
-    <!-- FOOTER COPYRIGHT -->
-    <div class="copyright-text">
-        &copy; 2026 NexaSupply Systems Ltd. All rights reserved.
-    </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
