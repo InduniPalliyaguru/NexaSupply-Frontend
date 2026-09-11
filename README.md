@@ -188,3 +188,4 @@ NexaSupply-Frontend/
 - **Module:** Advanced API Development (AAD)
 - **Institution:** Institute of Software Engineering (IJSE)
 - **Developer:** Induni Palliyaguru
+- **Project Report:** [View Final Project Report](https://docs.google.com/document/d/1nFWEkjL5hjw4HsosScmqVZH8QWY7DVjayyd6LrqYxok/edit?usp=sharing)
